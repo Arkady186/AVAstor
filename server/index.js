@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const compression = require('compression');
 const helmet = require('helmet');
 const crypto = require('crypto');
@@ -25,6 +26,7 @@ app.get('/_health', (req, res) => {
 
 const distDir = path.join(__dirname, '..', 'client', 'dist');
 app.use('/assets', express.static(path.join(distDir, 'assets'), { maxAge: '1y', immutable: true }));
+app.use(express.static(distDir, { index: false }));
 
 // Gating for HTML requests: only allow within Telegram webview
 app.use((req, res, next) => {
@@ -128,13 +130,41 @@ app.post('/api/verify', (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  const indexPath = path.join(distDir, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  return res.status(200).send(`<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>avastore</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0b0f14;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif"><div><div style="opacity:.75;margin-bottom:8px">avastore</div><div style="opacity:.6">Сервис запускается, попробуйте обновить через пару секунд…</div></div></body></html>`);
+});
+
 app.get('*', (req, res) => {
-  res.sendFile(path.join(distDir, 'index.html'));
+  const indexPath = path.join(distDir, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.redirect('/');
+});
+
+// Basic diagnostics
+process.on('unhandledRejection', (err) => {
+  // eslint-disable-next-line no-console
+  console.error('[unhandledRejection]', err);
+});
+process.on('uncaughtException', (err) => {
+  // eslint-disable-next-line no-console
+  console.error('[uncaughtException]', err);
 });
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`[server] Listening on http://localhost:${PORT}`);
+  // eslint-disable-next-line no-console
+  console.log(`[server] dist present: ${fs.existsSync(path.join(distDir, 'index.html'))}`);
+  // eslint-disable-next-line no-console
+  console.log(`[server] BOT_TOKEN set: ${Boolean(process.env.BOT_TOKEN)}`);
 });
 
 

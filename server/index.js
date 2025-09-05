@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const compression = require('compression');
 const helmet = require('helmet');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -11,6 +12,7 @@ app.use(helmet({
   contentSecurityPolicy: false,
 }));
 app.use(compression());
+app.use(express.json({ limit: '100kb' }));
 
 function isTelegramUserAgent(userAgent) {
   if (!userAgent || typeof userAgent !== 'string') return false;
@@ -34,7 +36,7 @@ app.use((req, res, next) => {
 
   if (!isTelegram && !process.env.ALLOW_BROWSER) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return res.status(403).send(`<!doctype html>
+    return res.status(200).send(`<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
@@ -63,6 +65,69 @@ app.use((req, res, next) => {
   next();
 });
 
+function buildDataCheckString(params) {
+  const entries = [];
+  for (const [key, value] of params.entries()) {
+    if (key === 'hash') continue;
+    entries.push([key, value]);
+  }
+  entries.sort((a, b) => a[0].localeCompare(b[0]));
+  return entries.map(([k, v]) => `${k}=${v}`).join('\n');
+}
+
+function verifyInitData(initDataString, botToken) {
+  if (!initDataString || !botToken) {
+    return { ok: false, reason: 'missing_params' };
+  }
+  const trimmed = initDataString.startsWith('?') ? initDataString.slice(1) : initDataString;
+  const params = new URLSearchParams(trimmed);
+  const hash = params.get('hash');
+  if (!hash) {
+    return { ok: false, reason: 'missing_hash' };
+  }
+
+  const dataCheckString = buildDataCheckString(params);
+  const secretKey = crypto
+    .createHmac('sha256', 'WebAppData')
+    .update(botToken)
+    .digest();
+  const computed = crypto
+    .createHmac('sha256', secretKey)
+    .update(dataCheckString)
+    .digest('hex');
+
+  const ok = crypto.timingSafeEqual(Buffer.from(computed, 'hex'), Buffer.from(hash, 'hex'));
+  if (!ok) {
+    return { ok: false, reason: 'invalid_hash' };
+  }
+
+  let user = undefined;
+  const userStr = params.get('user');
+  if (userStr) {
+    try { user = JSON.parse(userStr); } catch {}
+  }
+  return { ok: true, user };
+}
+
+app.post('/api/verify', (req, res) => {
+  try {
+    const botToken = process.env.BOT_TOKEN;
+    const { initData } = req.body || {};
+    const result = verifyInitData(initData, botToken);
+    if (!result.ok) {
+      return res.status(401).json({ ok: false, error: result.reason });
+    }
+    // Log minimal info for diagnostics (no secrets)
+    if (result.user?.id) {
+      // eslint-disable-next-line no-console
+      console.log(`[verify] user ${result.user.id} @${result.user.username || ''}`);
+    }
+    return res.json({ ok: true, user: result.user || null });
+  } catch (e) {
+    return res.status(500).json({ ok: false });
+  }
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
@@ -71,5 +136,6 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`[server] Listening on http://localhost:${PORT}`);
 });
+
 
 

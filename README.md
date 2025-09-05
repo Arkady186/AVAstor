@@ -33,4 +33,11 @@
 - `BOT_TOKEN` — токен бота (для будущей проверки подписи initData)
 - `APP_BASE_URL` — базовый URL приложения на Render
 
+### Включение проверки initData на Render
+
+1. Зайдите в Render → ваш Web Service → Environment → Add Environment Variable
+2. Добавьте `BOT_TOKEN` со значением токена вашего бота
+3. Redeploy (или Restart) сервиса
+4. Клиент отправляет `initData` на `POST /api/verify`; сервер проверяет подпись и возвращает `user`
+
 

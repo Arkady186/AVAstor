@@ -28,13 +28,17 @@ const distDir = path.join(__dirname, '..', 'client', 'dist');
 app.use('/assets', express.static(path.join(distDir, 'assets'), { maxAge: '1y', immutable: true }));
 app.use(express.static(distDir, { index: false }));
 
-// Gating for HTML requests: only allow within Telegram webview
+// Gating for HTML requests: only allow within Telegram webview (server hint, client still gates)
 app.use((req, res, next) => {
   const acceptsHtml = (req.headers['accept'] || '').includes('text/html');
   if (!acceptsHtml) return next();
 
   const userAgent = req.headers['user-agent'] || '';
-  const isTelegram = isTelegramUserAgent(userAgent);
+  const xrw = String(req.headers['x-requested-with'] || '').toLowerCase();
+  const isTelegram = isTelegramUserAgent(userAgent) || xrw.includes('telegram') || xrw.includes('org.telegram.messenger');
+
+  // Always allow root path to avoid false positives in some webviews; client will still gate
+  if (req.path === '/') return next();
 
   if (!isTelegram && !process.env.ALLOW_BROWSER) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');

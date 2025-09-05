@@ -15,7 +15,7 @@
 1. Создайте приватный репозиторий на GitHub и запушьте папку `miniapp` в корень репо.
 2. На Render создайте Web Service:
    - Connect → выберите ваш репозиторий
-   - Root Directory: `miniapp`
+   - Root Directory: `.`
    - Build Command: `npm install`
    - Start Command: `node server/index.js`
    - Environment: Node, `NODE_VERSION=18`

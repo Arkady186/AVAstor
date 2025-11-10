@@ -1,0 +1,156 @@
+.profile {
+  max-width: 100%;
+}
+
+.profile h1 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.profile-info {
+  text-align: center;
+  padding: 24px;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--tg-theme-button-color, #2481cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 16px;
+}
+
+.profile-info h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.profile-username {
+  color: var(--tg-theme-hint-color, #999999);
+  font-size: 14px;
+}
+
+.profile-section {
+  margin-bottom: 24px;
+}
+
+.profile-section h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 32px 16px;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+  border-radius: 12px;
+}
+
+.empty-orders p {
+  color: var(--tg-theme-hint-color, #999999);
+  margin-bottom: 16px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  padding: 16px;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #e0e0e0);
+  border-radius: 12px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.order-id {
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.order-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-pending {
+  background-color: #ff9800;
+  color: #ffffff;
+}
+
+.status-processing {
+  background-color: #2196f3;
+  color: #ffffff;
+}
+
+.status-shipped {
+  background-color: #9c27b0;
+  color: #ffffff;
+}
+
+.status-delivered {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+.status-cancelled {
+  background-color: #f44336;
+  color: #ffffff;
+}
+
+.order-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--tg-theme-hint-color, #999999);
+  font-size: 14px;
+}
+
+.order-total {
+  font-weight: 600;
+  color: var(--tg-theme-button-color, #2481cc);
+}
+
+.profile-actions {
+  margin-top: 24px;
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background-color: #f44336;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.loading {
+  text-align: center;
+  padding: 48px;
+  color: var(--tg-theme-hint-color, #999999);
+}
+

@@ -34,19 +34,6 @@ const banners = [
   { id: 'b3', title: 'Выбор стилистов', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1600&auto=format&fit=crop' },
 ]
 
-function IconHome() {
-  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>)
-}
-function IconCatalog() {
-  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg>)
-}
-function IconCart() {
-  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 5h2l1.6 9.1a2 2 0 0 0 2 1.7h5.8a2 2 0 0 0 2-1.6L20 9H8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="10" cy="20" r="1.5" fill="currentColor"/><circle cx="17" cy="20" r="1.5" fill="currentColor"/></svg>)
-}
-function IconProfile() {
-  return (<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>)
-}
-
 export function Marketplace() {
   const cards = useMemo(() => products, [])
   return (
@@ -104,13 +91,6 @@ export function Marketplace() {
           </article>
         ))}
       </main>
-
-      <nav className="wb-bottom">
-        <a className="active"><IconHome />Главная</a>
-        <a><IconCatalog />Каталог</a>
-        <a><IconCart />Корзина</a>
-        <a><IconProfile />Профиль</a>
-      </nav>
     </div>
   )
 }

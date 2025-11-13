@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Marketplace } from './Marketplace'
 import { Profile } from './Profile'
+import { Cart, type CartItem } from './Cart'
+import type { Product } from './Marketplace'
 
 function isInTelegramWebApp(): boolean {
   const tg = (window as any).Telegram?.WebApp
@@ -16,6 +18,7 @@ export default function App() {
   const [verified, setVerified] = useState<boolean>(false)
   const [ready, setReady] = useState<boolean>(false)
   const [tab, setTab] = useState<'home' | 'profile' | 'catalog' | 'cart'>('home')
+  const [cart, setCart] = useState<Record<string, CartItem>>({})
 
   useEffect(() => {
     setIsTelegram(isInTelegramWebApp())
@@ -55,6 +58,31 @@ export default function App() {
     return () => clearTimeout(t)
   }, [])
 
+  // Cart handlers
+  const addToCart = (p: Product) => {
+    setCart(prev => {
+      const cur = prev[p.id]
+      const nextQty = (cur?.qty || 0) + 1
+      return { ...prev, [p.id]: { ...p, qty: nextQty } }
+    })
+    setTab('cart')
+  }
+  const inc = (id: string) => setCart(prev => ({ ...prev, [id]: { ...prev[id], qty: prev[id].qty + 1 } }))
+  const dec = (id: string) => setCart(prev => {
+    const item = prev[id]
+    if (!item) return prev
+    const nextQty = item.qty - 1
+    const copy = { ...prev }
+    if (nextQty <= 0) { delete (copy as any)[id] } else { copy[id] = { ...item, qty: nextQty } }
+    return copy
+  })
+  const clear = () => setCart({})
+  const cartItems: CartItem[] = Object.values(cart)
+  const cartCount = cartItems.reduce((s, it) => s + it.qty, 0)
+
+  // Expose add to cart for Marketplace internal button
+  ;(window as any).__onAddToCart = addToCart
+
   const content = useMemo(() => {
     if (!ready) {
       return (
@@ -71,10 +99,11 @@ export default function App() {
       <div className="page">
         {tab === 'home' && <Marketplace />}
         {tab === 'profile' && <Profile displayName={displayName} username={username} photoUrl={photoUrl} />}
-        {tab !== 'home' && tab !== 'profile' && <Marketplace />}
+        {tab === 'cart' && <Cart items={cartItems} onInc={inc} onDec={dec} onClear={clear} />}
+        {tab === 'catalog' && <Marketplace />}
       </div>
     )
-  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl])
+  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, cartItems])
 
   return (
     <div className="container">
@@ -89,7 +118,7 @@ export default function App() {
         <nav className="wb-bottom">
           <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}><span className="i home" />Главная</a>
           <a className={tab==='catalog' ? 'active' : ''} onClick={() => setTab('catalog')}><span className="i catalog" />Каталог</a>
-          <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}><span className="i cart" />Корзина</a>
+          <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}><span className="i cart" />Корзина{cartCount>0 && <span className="badge">{cartCount}</span>}</a>
           <a className={tab==='profile' ? 'active' : ''} onClick={() => setTab('profile')}><span className="i profile" />Профиль</a>
         </nav>
       )}

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-type Product = {
+export type Product = {
   id: string
   title: string
   price: number
@@ -87,7 +87,7 @@ export function Marketplace() {
               <div className="price">{p.price.toLocaleString('ru-RU')} ₽</div>
               <div className="rating">★ {p.rating.toFixed(1)}</div>
             </div>
-            <button className="btn-primary">В корзину</button>
+            <button className="btn-primary" onClick={() => (window as any).__onAddToCart?.(p)}>В корзину</button>
           </article>
         ))}
       </main>

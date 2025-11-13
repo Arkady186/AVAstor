@@ -40,17 +40,6 @@ export default function App() {
   }, [])
 
   const content = useMemo(() => {
-    if (!isTelegram && !import.meta.env.DEV) {
-      return (
-        <div className="block">
-          <div className="card">
-            <h1>Откройте в Telegram</h1>
-            <p>Это мини‑приложение доступно только внутри Telegram.</p>
-          </div>
-        </div>
-      )
-    }
-
     return (
       <div className="loader">
         <div className="spinner"> 

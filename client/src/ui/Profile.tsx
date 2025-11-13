@@ -21,19 +21,25 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
     console.log('[Profile] Received props:', { displayName, username, photoUrl })
   }
   
-  // Telegram avatar fallback chain: photo_url -> username -> default
+  // Telegram avatar: prioritize photo_url, then use Telegram CDN by username
   const avatar = useMemo(() => {
-    if (photoUrl) return photoUrl
-    if (username) return `https://t.me/i/userpic/160/${username}.jpg`
+    if (photoUrl) {
+      // Use provided photo URL (from Telegram)
+      return photoUrl
+    }
+    if (username) {
+      // Fallback: get avatar from Telegram CDN using username
+      return `https://t.me/i/userpic/320/${username}.jpg`
+    }
     return DEFAULT_AVATAR
   }, [photoUrl, username])
   
-  // Show name or username, never "Гость" if we have any data
+  // Display name: show displayName if available, otherwise show username with @
   const name = displayName || (username ? `@${username}` : null) || 'Гость'
   
   // Only log in development
   if (process.env.NODE_ENV === 'development') {
-    console.log('[Profile] Computed:', { name, avatar })
+    console.log('[Profile] Computed:', { name, avatar, username, photoUrl })
   }
   
   const [avatarSrc, setAvatarSrc] = useState(() => avatar)
@@ -56,7 +62,7 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
     
     // Try Telegram userpic if we have username and current src is not userpic
     if (username && !target.src.includes('userpic')) {
-      const userpicUrl = `https://t.me/i/userpic/160/${username}.jpg`
+      const userpicUrl = `https://t.me/i/userpic/320/${username}.jpg`
       target.src = userpicUrl
     } else {
       // Use default SVG placeholder
@@ -86,7 +92,14 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
         )}
         <div className="profile-name-section">
           <div className="profile-name">{name}</div>
-          {username && <div className="profile-username">@{username}</div>}
+          {username && (
+            <div className="profile-username">@{username}</div>
+          )}
+          {!username && displayName && (
+            <div className="profile-username" style={{ opacity: 0.6, fontStyle: 'italic' }}>
+              Username не указан
+            </div>
+          )}
           <div className="profile-settings">Данные и настройки &gt;</div>
         </div>
       </div>

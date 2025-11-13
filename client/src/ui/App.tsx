@@ -60,13 +60,13 @@ export default function App() {
           const display = fullName || user.username || (user.id ? `User ${user.id}` : null)
           setDisplayName(display)
           
-          // Get photo URL
+          // Get photo URL - prioritize photo_url, fallback to Telegram CDN
           if (user.photo_url) {
             setPhotoUrl(user.photo_url)
           } else if (user.username) {
-            // Fallback: try to get photo from Telegram CDN
-            const fallbackPhoto = `https://t.me/i/userpic/160/${user.username}.jpg`
-            setPhotoUrl(fallbackPhoto)
+            // Use Telegram CDN for user avatar (higher resolution)
+            const telegramAvatar = `https://t.me/i/userpic/320/${user.username}.jpg`
+            setPhotoUrl(telegramAvatar)
           }
         }
       
@@ -89,8 +89,11 @@ export default function App() {
                 if (j.user.username && !username) {
                   setUsername(j.user.username)
                 }
-                if (j.user.photo_url && !photoUrl) {
+                if (j.user.photo_url) {
                   setPhotoUrl(j.user.photo_url)
+                } else if (j.user.username && !photoUrl) {
+                  // Fallback to Telegram CDN
+                  setPhotoUrl(`https://t.me/i/userpic/320/${j.user.username}.jpg`)
                 }
               }
             })

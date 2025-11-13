@@ -5,6 +5,8 @@ type ProfileProps = {
 }
 
 export function Profile({ displayName, username, photoUrl }: ProfileProps) {
+  console.log('[Profile] Received props:', { displayName, username, photoUrl })
+  
   // Telegram avatar fallback chain: photo_url -> username -> default
   const getAvatar = () => {
     if (photoUrl) return photoUrl
@@ -13,7 +15,10 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
   }
   
   const avatar = getAvatar()
-  const name = displayName || username || 'Гость'
+  // Show name or username, never "Гость" if we have any data
+  const name = displayName || (username ? `@${username}` : null) || 'Гость'
+  
+  console.log('[Profile] Computed:', { name, avatar })
   
   return (
     <div className="profile market market--white profile-page">

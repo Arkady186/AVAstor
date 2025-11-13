@@ -26,48 +26,109 @@ export default function App() {
 
   useEffect(() => {
     setIsTelegram(isInTelegramWebApp())
-    try {
-      const tg = (window as any).Telegram?.WebApp
-      tg?.ready?.()
-      tg?.expand?.()
-      tg?.MainButton?.hide?.()
-      const unsafe = (window as any).Telegram?.WebApp?.initDataUnsafe
-      if (unsafe?.user) {
-        setUserId(unsafe.user.id ?? null)
-        setUsername(unsafe.user.username ?? null)
-        const fullName = [unsafe.user.first_name, unsafe.user.last_name].filter(Boolean).join(' ')
-        setDisplayName(fullName || unsafe.user.username || `User ${unsafe.user.id}` || null)
-        if (unsafe.user.photo_url) {
-          setPhotoUrl(unsafe.user.photo_url)
+    
+    const loadTelegramData = () => {
+      try {
+        const tg = (window as any).Telegram?.WebApp
+        if (!tg) {
+          console.warn('[App] Telegram WebApp not available')
+          return
         }
-      }
-      if (tg?.initData) {
-        fetch('/api/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ initData: tg.initData }),
-        })
-          .then(r => r.json())
-          .then((j) => {
-            if (j?.ok) {
-              setVerified(true)
-              if (j.user) {
-                setUserId(j.user.id ?? null)
-                setUsername(j.user.username ?? null)
-                const fullName = j.user.first_name ? [j.user.first_name, j.user.last_name].filter(Boolean).join(' ') : null
-                setDisplayName(fullName || displayName || j.user.username || `User ${j.user.id}`)
-                if (j.user.photo_url) {
+        
+        console.log('[App] Telegram WebApp found:', tg)
+        tg.ready?.()
+        tg.expand?.()
+        tg.MainButton?.hide?.()
+        
+        // Get user data from Telegram WebApp (primary source)
+        const unsafe = tg.initDataUnsafe
+        console.log('[App] Telegram initDataUnsafe:', unsafe)
+        
+        if (unsafe?.user) {
+          const user = unsafe.user
+          console.log('[App] Telegram user data:', user)
+          
+          setUserId(user.id ?? null)
+          setUsername(user.username ?? null)
+          
+          // Build display name: first_name + last_name, fallback to username, then User ID
+          const firstName = user.first_name || ''
+          const lastName = user.last_name || ''
+          const fullName = [firstName, lastName].filter(Boolean).join(' ').trim()
+          const display = fullName || user.username || (user.id ? `User ${user.id}` : null)
+          console.log('[App] Setting displayName:', display)
+          setDisplayName(display)
+          
+          // Get photo URL
+          if (user.photo_url) {
+            console.log('[App] Setting photoUrl from user.photo_url:', user.photo_url)
+            setPhotoUrl(user.photo_url)
+          } else if (user.username) {
+            // Fallback: try to get photo from Telegram CDN
+            const fallbackPhoto = `https://t.me/i/userpic/160/${user.username}.jpg`
+            console.log('[App] Setting photoUrl from username fallback:', fallbackPhoto)
+            setPhotoUrl(fallbackPhoto)
+          }
+        } else {
+          console.warn('[App] No user data in initDataUnsafe')
+        }
+      
+        // Optional: verify with server (but don't block on it)
+        if (tg.initData) {
+          fetch('/api/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData: tg.initData }),
+          })
+            .then(r => r.json())
+            .then((j) => {
+              if (j?.ok && j.user) {
+                setVerified(true)
+                // Update with server-verified data if available
+                if (j.user.first_name || j.user.username) {
+                  const fullName = j.user.first_name ? [j.user.first_name, j.user.last_name].filter(Boolean).join(' ') : null
+                  setDisplayName(fullName || j.user.username || displayName || `User ${j.user.id}`)
+                }
+                if (j.user.username && !username) {
+                  setUsername(j.user.username)
+                }
+                if (j.user.photo_url && !photoUrl) {
                   setPhotoUrl(j.user.photo_url)
                 }
               }
-            }
-          })
-          .catch(() => {})
+            })
+            .catch((e) => {
+              console.warn('[App] Server verification failed:', e)
+              // Server verification failed, but we already have data from initDataUnsafe
+            })
+        }
+      } catch (e) {
+        console.error('[App] Error getting Telegram data:', e)
       }
-    } catch {}
+    }
+    
+    // Try to load immediately
+    loadTelegramData()
+    
+    // Also listen for ready event in case Telegram loads later
+    const tg = (window as any).Telegram?.WebApp
+    if (tg) {
+      tg.onEvent?.('ready', loadTelegramData)
+      tg.onEvent?.('viewportChanged', loadTelegramData)
+    }
+    
+    return () => {
+      if (tg) {
+        tg.offEvent?.('ready', loadTelegramData)
+        tg.offEvent?.('viewportChanged', loadTelegramData)
+      }
+    }
+  }, [])
+  
+  useEffect(() => {
     // Restore cart
     try { const saved = localStorage.getItem('ava_cart'); if (saved) setCart(JSON.parse(saved)) } catch {}
-
+    
     // Minimal loading time for bottom menu (icons are already in CSS)
     // Just show beautiful animation for 2 seconds
     const t = setTimeout(() => setReady(true), 2000)
@@ -138,7 +199,7 @@ export default function App() {
         {tab === 'catalog' && <Catalog />}
       </div>
     )
-  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, cartItems])
+  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, cartItems, openProduct])
 
   return (
     <div className="container">

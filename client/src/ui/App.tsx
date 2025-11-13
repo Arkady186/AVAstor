@@ -3,6 +3,9 @@ import { Marketplace } from './Marketplace'
 import { Profile } from './Profile'
 import { Cart, type CartItem } from './Cart'
 import type { Product } from './Marketplace'
+import { Catalog } from './Catalog'
+import { ProductDetail } from './ProductDetail'
+import type { ProductData } from '../data/products'
 
 function isInTelegramWebApp(): boolean {
   const tg = (window as any).Telegram?.WebApp
@@ -19,6 +22,7 @@ export default function App() {
   const [ready, setReady] = useState<boolean>(false)
   const [tab, setTab] = useState<'home' | 'profile' | 'catalog' | 'cart'>('home')
   const [cart, setCart] = useState<Record<string, CartItem>>({})
+  const [openProduct, setOpenProduct] = useState<ProductData | null>(null)
 
   useEffect(() => {
     setIsTelegram(isInTelegramWebApp())
@@ -54,9 +58,17 @@ export default function App() {
           .catch(() => {})
       }
     } catch {}
+    // Restore cart
+    try { const saved = localStorage.getItem('ava_cart'); if (saved) setCart(JSON.parse(saved)) } catch {}
+
     const t = setTimeout(() => setReady(true), 3000)
     return () => clearTimeout(t)
   }, [])
+
+  // Persist cart
+  useEffect(() => {
+    try { localStorage.setItem('ava_cart', JSON.stringify(cart)) } catch {}
+  }, [cart])
 
   // Cart handlers
   const addToCart = (p: Product) => {
@@ -66,6 +78,15 @@ export default function App() {
       return { ...prev, [p.id]: { ...p, qty: nextQty } }
     })
     setTab('cart')
+  }
+  const addToCartWithSize = (p: ProductData, size?: string) => {
+    const id = size ? `${p.id}_${size}` : p.id
+    setCart(prev => {
+      const cur = prev[id]
+      const nextQty = (cur?.qty || 0) + 1
+      return { ...prev, [id]: { ...p, id, title: size ? `${p.title} • ${size}` : p.title, qty: nextQty } as any }
+    })
+    setTab('cart'); setOpenProduct(null)
   }
   const inc = (id: string) => setCart(prev => ({ ...prev, [id]: { ...prev[id], qty: prev[id].qty + 1 } }))
   const dec = (id: string) => setCart(prev => {
@@ -82,6 +103,7 @@ export default function App() {
 
   // Expose add to cart for Marketplace internal button
   ;(window as any).__onAddToCart = addToCart
+  ;(window as any).__onOpenProduct = (p: ProductData) => setOpenProduct(p)
 
   const content = useMemo(() => {
     if (!ready) {
@@ -100,7 +122,7 @@ export default function App() {
         {tab === 'home' && <Marketplace />}
         {tab === 'profile' && <Profile displayName={displayName} username={username} photoUrl={photoUrl} />}
         {tab === 'cart' && <Cart items={cartItems} onInc={inc} onDec={dec} onClear={clear} />}
-        {tab === 'catalog' && <Marketplace />}
+        {tab === 'catalog' && <Catalog />}
       </div>
     )
   }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, cartItems])
@@ -114,6 +136,9 @@ export default function App() {
         <div className="glow glow-3" />
       </div>
       {content}
+      {openProduct && (
+        <ProductDetail product={openProduct} onClose={() => setOpenProduct(null)} onAdd={addToCartWithSize} />
+      )}
       {ready && (
         <nav className="wb-bottom">
           <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}><span className="i home" />Главная</a>

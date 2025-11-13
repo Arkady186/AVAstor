@@ -68,7 +68,7 @@ export default function App() {
       )
     }
     return (
-      <div className="loader">
+      <div className="page">
         {tab === 'home' && <Marketplace />}
         {tab === 'profile' && <Profile displayName={displayName} username={username} photoUrl={photoUrl} />}
         {tab !== 'home' && tab !== 'profile' && <Marketplace />}

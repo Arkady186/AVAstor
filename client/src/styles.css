@@ -37,6 +37,8 @@ body {
 .brand { font-size: 28px; font-weight: 800; letter-spacing: .6px; text-transform: lowercase; color: #ffffff; }
 .subtitle { font-size: 14px; color: var(--muted); }
 
+.page { position: relative; height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 90px; }
+
 .spinner { width: 78px; height: 78px; position: relative; }
 .spinner div { box-sizing: border-box; display: block; position: absolute; width: 100%; height: 100%; border: 4px solid transparent; border-top-color: var(--accent); border-radius: 50%; animation: spin 1.2s linear infinite; }
 .spinner div:nth-child(2) { border-color: transparent; border-right-color: var(--accent-2); animation-delay: -0.2s; }
@@ -100,14 +102,14 @@ body {
 .btn-primary { margin-top: 2px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: #fff; font-weight: 600; }
 .market__footer { display: flex; align-items: center; justify-content: space-between; opacity: .65; font-size: 12px; padding-top: 10px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,.08); }
 
-.wb-bottom { position: sticky; bottom: 6px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-top: 10px; margin-top: 18px; }
-.wb-bottom a { display: grid; justify-items: center; gap: 4px; padding: 10px 8px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: #fff; font-size: 12px; opacity: .85; }
-.wb-bottom a.active { outline: 1.5px solid rgba(122,56,212,.6); background: rgba(122,56,212,.18); }
+.wb-bottom { position: sticky; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px 8px 14px; background: rgba(255,255,255,.9); backdrop-filter: blur(6px); border-top: 1px solid rgba(0,0,0,.08); }
+.wb-bottom a { display: grid; justify-items: center; gap: 4px; padding: 10px 8px; border-radius: 12px; background: #ffffff; border: 1px solid rgba(0,0,0,.12); color: #0e1115; font-size: 12px; }
+.wb-bottom a.active { outline: 1.5px solid rgba(106,43,187,.45); background: rgba(106,43,187,.08); }
 .i { width: 18px; height: 18px; }
-.i.home { background: radial-gradient(circle at 50% 30%, #fff, rgba(255,255,255,.2)); }
-.i.catalog { background: linear-gradient(#fff,#fff) center/80% 2px no-repeat; }
-.i.cart { background: radial-gradient(circle, #fff 40%, transparent 42%) 60% 50%/6px 6px no-repeat; }
-.i.profile { background: radial-gradient(circle, #fff 40%, transparent 42%) center/6px 6px no-repeat; }
+.i.home { background: radial-gradient(circle at 50% 30%, #6a2bbb, rgba(106,43,187,.25)); }
+.i.catalog { background: linear-gradient(#6a2bbb,#6a2bbb) center/80% 2px no-repeat; }
+.i.cart { background: radial-gradient(circle, #6a2bbb 40%, transparent 42%) 60% 50%/6px 6px no-repeat; }
+.i.profile { background: radial-gradient(circle, #6a2bbb 40%, transparent 42%) center/6px 6px no-repeat; }
 
 /* Profile */
 .profile { padding: 16px; }

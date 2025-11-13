@@ -20,21 +20,63 @@ const products: Product[] = [
 
 const categories = ['Новинки', 'Одежда', 'Обувь', 'Аксессуары', 'Спорт', 'Sale']
 
+const stories = [
+  { id: 's1', title: 'Весна' },
+  { id: 's2', title: 'Луки' },
+  { id: 's3', title: 'Деним' },
+  { id: 's4', title: 'Спорт' },
+  { id: 's5', title: 'Аксесс.' },
+]
+
+const banners = [
+  { id: 'b1', title: 'Скидки недели' },
+  { id: 'b2', title: 'Коллекция basic' },
+  { id: 'b3', title: 'Выбор стилистов' },
+]
+
 export function Marketplace() {
   const cards = useMemo(() => products, [])
   return (
-    <div className="market">
-      <header className="market__header">
-        <div className="market__brand">avastore</div>
-        <div className="market__search">
-          <input placeholder="Поиск товаров" />
+    <div className="market market--purple">
+      <header className="wb-header">
+        <div className="wb-title">avastore</div>
+        <div className="wb-actions">
+          <button className="wb-ico bell" aria-label="Уведомления" />
+          <button className="wb-ico cart" aria-label="Корзина" />
+        </div>
+        <div className="wb-search">
+          <span className="ico search" />
+          <input placeholder="Поиск" />
+          <span className="ico mic" />
+          <span className="ico scan" />
+          <span className="ico cam" />
         </div>
       </header>
+
+      <section className="wb-stories">
+        {stories.map(s => (
+          <div className="wb-story" key={s.id}>
+            <div className="wb-story__img" />
+            <div className="wb-story__ttl">{s.title}</div>
+          </div>
+        ))}
+      </section>
+
+      <section className="wb-banners">
+        {banners.map(b => (
+          <div className="wb-banner" key={b.id}>
+            <div className="wb-banner__img" />
+            <div className="wb-banner__dots"><i/><i/><i/></div>
+          </div>
+        ))}
+      </section>
+
       <div className="market__chips">
         {categories.map(c => (
           <button className="chip" key={c}>{c}</button>
         ))}
       </div>
+
       <main className="market__grid">
         {cards.map(p => (
           <article className="cardv2" key={p.id}>
@@ -49,14 +91,13 @@ export function Marketplace() {
           </article>
         ))}
       </main>
-      <footer className="market__footer">
-        <div>© avastore</div>
-        <nav>
-          <a>Профиль</a>
-          <a>Корзина</a>
-          <a>Каталог</a>
-        </nav>
-      </footer>
+
+      <nav className="wb-bottom">
+        <a className="active"><span className="i home" />Главная</a>
+        <a><span className="i catalog" />Каталог</a>
+        <a><span className="i cart" />Корзина</a>
+        <a><span className="i profile" />Профиль</a>
+      </nav>
     </div>
   )
 }

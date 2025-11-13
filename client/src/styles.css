@@ -11,6 +11,9 @@
   --accent-2: #ff8ab4;
   --text: #ffffff;
   --muted: rgba(255,255,255,.7);
+  --wb-purple: #6a2bbb;
+  --wb-purple-2: #7a38d4;
+  --wb-bg: #f2e9ff0f;
 }
 
 * { box-sizing: border-box; }
@@ -49,6 +52,30 @@ body {
 
 /* Marketplace */
 .market { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; padding: 16px; }
+.market--purple .wb-header { background: linear-gradient(180deg, var(--wb-purple-2), var(--wb-purple)); padding: 14px 14px 16px; border-radius: 14px; box-shadow: 0 10px 40px rgba(106,43,187,.35); margin-bottom: 12px; }
+.wb-title { font-weight: 900; letter-spacing: .8px; color: #fff; text-transform: uppercase; }
+.wb-actions { display: flex; gap: 8px; margin-top: 6px; }
+.wb-ico { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.25); }
+.wb-search { display: grid; grid-template-columns: 20px 1fr 20px 20px 20px; align-items: center; gap: 8px; margin-top: 10px; padding: 10px 12px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 12px; }
+.wb-search input { background: transparent; border: 0; outline: none; color: #fff; }
+.ico { width: 20px; height: 20px; opacity: .9; }
+.ico.search, .i.home { background: radial-gradient(circle at 40% 40%, #fff, rgba(255,255,255,.2)); -webkit-mask: radial-gradient(circle at 55% 55%, black 45%, transparent 47%) left/20px 20px no-repeat; }
+.ico.mic { background: radial-gradient(circle, #fff, #fff) center/4px 4px no-repeat; }
+.ico.scan { background: conic-gradient(from 0deg, #fff, #fff) center/70% 2px no-repeat; }
+.ico.cam { background: linear-gradient(#fff,#fff) center/70% 2px no-repeat; }
+
+.wb-stories { display: grid; grid-auto-flow: column; grid-auto-columns: 92px; gap: 12px; overflow-x: auto; padding: 6px 2px 8px; margin: 6px 0 6px; }
+.wb-story { display: grid; justify-items: center; gap: 6px; }
+.wb-story__img { width: 84px; height: 84px; border-radius: 14px; border: 2px solid #ff62b0; background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.06)); }
+.wb-story__ttl { font-size: 12px; color: #fff; opacity: .9; }
+
+.wb-banners { display: grid; gap: 10px; margin-bottom: 8px; }
+.wb-banner { position: relative; height: 140px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); }
+.wb-banner__img { position: absolute; inset: 0; border-radius: 16px; }
+.wb-banner__dots { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 6px; }
+.wb-banner__dots i { width: 6px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.5); }
+.wb-banner__dots i:first-child { width: 18px; border-radius: 999px; background: #fff; }
+
 .market__header { display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center; margin-bottom: 12px; }
 .market__brand { font-weight: 800; letter-spacing: .6px; text-transform: lowercase; color: #fff; opacity: .9; }
 .market__search input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); color: #fff; outline: none; }
@@ -65,5 +92,14 @@ body {
 .cardv2__meta { display: flex; align-items: center; justify-content: space-between; color: #fff; opacity: .9; font-size: 13px; }
 .btn-primary { margin-top: 2px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: #fff; font-weight: 600; }
 .market__footer { display: flex; align-items: center; justify-content: space-between; opacity: .65; font-size: 12px; padding-top: 10px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,.08); }
+
+.wb-bottom { position: sticky; bottom: 6px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding-top: 10px; margin-top: 18px; }
+.wb-bottom a { display: grid; justify-items: center; gap: 4px; padding: 10px 8px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: #fff; font-size: 12px; opacity: .85; }
+.wb-bottom a.active { outline: 1.5px solid rgba(122,56,212,.6); background: rgba(122,56,212,.18); }
+.i { width: 18px; height: 18px; }
+.i.home { background: radial-gradient(circle at 50% 30%, #fff, rgba(255,255,255,.2)); }
+.i.catalog { background: linear-gradient(#fff,#fff) center/80% 2px no-repeat; }
+.i.cart { background: radial-gradient(circle, #fff 40%, transparent 42%) 60% 50%/6px 6px no-repeat; }
+.i.profile { background: radial-gradient(circle, #fff 40%, transparent 42%) center/6px 6px no-repeat; }
 
 

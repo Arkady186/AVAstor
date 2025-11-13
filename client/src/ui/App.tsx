@@ -121,7 +121,7 @@ export default function App() {
       <div className="page">
         {tab === 'home' && <Marketplace />}
         {tab === 'profile' && <Profile displayName={displayName} username={username} photoUrl={photoUrl} />}
-        {tab === 'cart' && <Cart items={cartItems} onInc={inc} onDec={dec} onClear={clear} />}
+        {tab === 'cart' && <Cart items={cartItems} onInc={inc} onDec={dec} onClear={clear} onSelectAll={() => {}} />}
         {tab === 'catalog' && <Catalog />}
       </div>
     )

@@ -37,7 +37,7 @@ const banners = [
 export function Marketplace() {
   const cards = useMemo(() => products, [])
   return (
-    <div className="market market--purple market--white">
+    <div className="market market--white">
       <header className="wb-header">
         <div className="wb-title">avastore</div>
         <div className="wb-actions">

@@ -109,11 +109,15 @@ export default function App() {
     if (!ready) {
       return (
         <div className="loader">
-          <div className="spinner"> 
-            <div></div><div></div><div></div><div></div>
+          <div className="loader-animation">
+            <div className="wave wave-1"></div>
+            <div className="wave wave-2"></div>
+            <div className="wave wave-3"></div>
+            <div className="gradient-orb orb-1"></div>
+            <div className="gradient-orb orb-2"></div>
+            <div className="gradient-orb orb-3"></div>
           </div>
           <div className="brand">avastore</div>
-          <div className="subtitle">{verified && (userId ? `Добро пожаловать, ${username ? '@'+username : 'user '+userId}` : 'Проверка завершена')} { !verified && 'Загружаем коллекцию...' }</div>
         </div>
       )
     }

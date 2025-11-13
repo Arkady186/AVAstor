@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 
 type ProfileProps = {
   displayName?: string | null
@@ -6,31 +6,31 @@ type ProfileProps = {
   photoUrl?: string | null
 }
 
+// Create a simple SVG placeholder as data URI (using encodeURIComponent instead of btoa)
+const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent(`
+  <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
+    <rect width="160" height="160" fill="#6a2bbb"/>
+    <circle cx="80" cy="60" r="25" fill="white" opacity="0.9"/>
+    <path d="M 50 120 Q 50 100 80 100 Q 110 100 110 120" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+  </svg>
+`)
+
 export function Profile({ displayName, username, photoUrl }: ProfileProps) {
   console.log('[Profile] Received props:', { displayName, username, photoUrl })
   
-  // Create a simple SVG placeholder as data URI
-  const defaultAvatar = 'data:image/svg+xml;base64,' + btoa(`
-    <svg width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-      <rect width="160" height="160" fill="#6a2bbb"/>
-      <text x="50%" y="50%" font-family="Arial" font-size="60" fill="white" text-anchor="middle" dominant-baseline="middle">👤</text>
-    </svg>
-  `)
-  
   // Telegram avatar fallback chain: photo_url -> username -> default
-  const getAvatar = () => {
+  const avatar = useMemo(() => {
     if (photoUrl) return photoUrl
     if (username) return `https://t.me/i/userpic/160/${username}.jpg`
-    return defaultAvatar
-  }
+    return DEFAULT_AVATAR
+  }, [photoUrl, username])
   
-  const avatar = getAvatar()
   // Show name or username, never "Гость" if we have any data
   const name = displayName || (username ? `@${username}` : null) || 'Гость'
   
   console.log('[Profile] Computed:', { name, avatar })
   
-  const [avatarSrc, setAvatarSrc] = useState(avatar)
+  const [avatarSrc, setAvatarSrc] = useState(() => avatar)
   const [avatarError, setAvatarError] = useState(false)
   
   useEffect(() => {
@@ -54,7 +54,7 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
       target.src = userpicUrl
     } else {
       // Use default SVG placeholder
-      target.src = defaultAvatar
+      target.src = DEFAULT_AVATAR
     }
   }
   
@@ -70,7 +70,13 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
           />
         )}
         {avatarError && (
-          <div className="profile-avatar profile-avatar-placeholder">👤</div>
+          <div className="profile-avatar profile-avatar-placeholder">
+            <svg width="64" height="64" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+              <rect width="160" height="160" fill="#6a2bbb"/>
+              <circle cx="80" cy="60" r="25" fill="white" opacity="0.9"/>
+              <path d="M 50 120 Q 50 100 80 100 Q 110 100 110 120" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
         )}
         <div className="profile-name-section">
           <div className="profile-name">{name}</div>

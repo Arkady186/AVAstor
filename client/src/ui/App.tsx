@@ -198,6 +198,9 @@ export default function App() {
             <div className="gradient-orb orb-3"></div>
             <div className="brand">avastore</div>
           </div>
+          {userId && (
+            <div className="loader-user-id">ID: {userId}</div>
+          )}
         </div>
       )
     }

@@ -52,6 +52,13 @@ body {
 
 /* Marketplace */
 .market { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; padding: 16px; }
+.market--white { background: #ffffff; color: #0e1115; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,.18); }
+.market--white .market__chips .chip { border-color: rgba(0,0,0,.1); background: rgba(0,0,0,.035); color: #0e1115; }
+.market--white .cardv2 { background: #fff; border-color: rgba(0,0,0,.08); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.market--white .cardv2__title, .market--white .cardv2__meta { color: #0e1115; opacity: .95; }
+.market--white .btn-primary { background: #6a2bbb; border-color: #6a2bbb; }
+.market--white .wb-bottom a { background: #fff; border-color: rgba(0,0,0,.12); color: #0e1115; }
+.market--white .wb-bottom a.active { outline: 1.5px solid rgba(106,43,187,.45); background: rgba(106,43,187,.08); }
 .market--purple .wb-header { background: linear-gradient(180deg, var(--wb-purple-2), var(--wb-purple)); padding: 14px 14px 16px; border-radius: 14px; box-shadow: 0 10px 40px rgba(106,43,187,.35); margin-bottom: 12px; }
 .wb-title { font-weight: 900; letter-spacing: .8px; color: #fff; text-transform: uppercase; }
 .wb-actions { display: flex; gap: 8px; margin-top: 6px; }
@@ -71,7 +78,7 @@ body {
 
 .wb-banners { display: grid; gap: 10px; margin-bottom: 8px; }
 .wb-banner { position: relative; height: 140px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); }
-.wb-banner__img { position: absolute; inset: 0; border-radius: 16px; }
+.wb-banner__img { position: absolute; inset: 0; border-radius: 16px; background-size: cover; background-position: center; }
 .wb-banner__dots { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 6px; }
 .wb-banner__dots i { width: 6px; height: 6px; border-radius: 999px; background: rgba(255,255,255,.5); }
 .wb-banner__dots i:first-child { width: 18px; border-radius: 999px; background: #fff; }

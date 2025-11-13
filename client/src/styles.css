@@ -384,6 +384,15 @@ body {
 .profile-page { padding: 0; background: #ffffff; }
 .profile-top { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(0,0,0,.08); }
 .profile-avatar { width: 64px; height: 64px; border-radius: 999px; object-fit: cover; border: 2px solid rgba(0,0,0,.08); }
+.profile-avatar-placeholder { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: #6a2bbb; 
+  color: #fff; 
+  font-size: 32px; 
+  border: 2px solid rgba(0,0,0,.08); 
+}
 .profile-name-section { flex: 1; }
 .profile-name { font-weight: 800; font-size: 18px; color: #0e1115; margin-bottom: 2px; }
 .profile-username { font-size: 14px; color: #6a2bbb; font-weight: 500; margin-bottom: 4px; }

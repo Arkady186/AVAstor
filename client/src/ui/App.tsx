@@ -113,16 +113,26 @@ export default function App() {
     // Also listen for ready event in case Telegram loads later
     const tg = (window as any).Telegram?.WebApp
     if (tg) {
-      tg.onEvent?.('ready', loadTelegramData)
-      tg.onEvent?.('viewportChanged', loadTelegramData)
-    }
-    
-    return () => {
-      if (tg) {
-        tg.offEvent?.('ready', loadTelegramData)
-        tg.offEvent?.('viewportChanged', loadTelegramData)
+      // Try again after a short delay in case data wasn't ready
+      const retryTimeout = setTimeout(() => {
+        console.log('[App] Retrying Telegram data load...')
+        loadTelegramData()
+      }, 500)
+      
+      tg.onEvent?.('ready', () => {
+        console.log('[App] Telegram ready event fired')
+        loadTelegramData()
+      })
+      
+      return () => {
+        clearTimeout(retryTimeout)
+        if (tg) {
+          tg.offEvent?.('ready', loadTelegramData)
+        }
       }
     }
+    
+    return () => {}
   }, [])
   
   useEffect(() => {

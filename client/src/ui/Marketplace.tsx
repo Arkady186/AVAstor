@@ -38,10 +38,6 @@ export function Marketplace() {
         </div>
       </div>
 
-      <section className="promo-banner">
-        <div className="promo-text">11.11 скидки на максимум</div>
-        <div className="promo-timer">Ещё 01:10:34 &gt;</div>
-      </section>
 
       <section className="ad-banner">
         <div className="ad-content">РИВ ГОШ теперь на avastore</div>

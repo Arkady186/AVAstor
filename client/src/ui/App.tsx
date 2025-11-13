@@ -35,8 +35,11 @@ export default function App() {
       if (unsafe?.user) {
         setUserId(unsafe.user.id ?? null)
         setUsername(unsafe.user.username ?? null)
-        setDisplayName([unsafe.user.first_name, unsafe.user.last_name].filter(Boolean).join(' ') || null)
-        setPhotoUrl(unsafe.user.photo_url ?? null)
+        const fullName = [unsafe.user.first_name, unsafe.user.last_name].filter(Boolean).join(' ')
+        setDisplayName(fullName || unsafe.user.username || `User ${unsafe.user.id}` || null)
+        if (unsafe.user.photo_url) {
+          setPhotoUrl(unsafe.user.photo_url)
+        }
       }
       if (tg?.initData) {
         fetch('/api/verify', {
@@ -51,7 +54,11 @@ export default function App() {
               if (j.user) {
                 setUserId(j.user.id ?? null)
                 setUsername(j.user.username ?? null)
-                setDisplayName(j.user.first_name ? [j.user.first_name, j.user.last_name].filter(Boolean).join(' ') : displayName)
+                const fullName = j.user.first_name ? [j.user.first_name, j.user.last_name].filter(Boolean).join(' ') : null
+                setDisplayName(fullName || displayName || j.user.username || `User ${j.user.id}`)
+                if (j.user.photo_url) {
+                  setPhotoUrl(j.user.photo_url)
+                }
               }
             }
           })

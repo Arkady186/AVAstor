@@ -5,14 +5,35 @@ type ProfileProps = {
 }
 
 export function Profile({ displayName, username, photoUrl }: ProfileProps) {
-  const fallback = 'https://avatars.githubusercontent.com/u/9919?s=200&v=4'
-  const avatar = photoUrl || (username ? `https://t.me/i/userpic/160/${username}.jpg` : fallback)
+  // Telegram avatar fallback chain: photo_url -> username -> default
+  const getAvatar = () => {
+    if (photoUrl) return photoUrl
+    if (username) return `https://t.me/i/userpic/160/${username}.jpg`
+    return 'https://via.placeholder.com/160/6a2bbb/ffffff?text=User'
+  }
+  
+  const avatar = getAvatar()
+  const name = displayName || username || 'Гость'
+  
   return (
     <div className="profile market market--white profile-page">
       <div className="profile-top">
-        <img className="profile-avatar" src={avatar} alt="avatar" onError={(e) => { (e.currentTarget as HTMLImageElement).src = fallback }} />
+        <img 
+          className="profile-avatar" 
+          src={avatar} 
+          alt="avatar" 
+          onError={(e) => { 
+            const target = e.currentTarget as HTMLImageElement
+            if (username && !target.src.includes('userpic')) {
+              target.src = `https://t.me/i/userpic/160/${username}.jpg`
+            } else {
+              target.src = 'https://via.placeholder.com/160/6a2bbb/ffffff?text=User'
+            }
+          }} 
+        />
         <div className="profile-name-section">
-          <div className="profile-name">{displayName || 'Гость'}</div>
+          <div className="profile-name">{name}</div>
+          {username && <div className="profile-username">@{username}</div>}
           <div className="profile-settings">Данные и настройки &gt;</div>
         </div>
       </div>

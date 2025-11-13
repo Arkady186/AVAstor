@@ -145,14 +145,12 @@ export default function App() {
       {openProduct && (
         <ProductDetail product={openProduct} onClose={() => setOpenProduct(null)} onAdd={addToCartWithSize} />
       )}
-      {ready && (
-        <nav className="wb-bottom">
-          <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}><span className="i home" />Главная</a>
-          <a className={tab==='catalog' ? 'active' : ''} onClick={() => setTab('catalog')}><span className="i catalog" />Каталог</a>
-          <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}><span className="i cart" />Корзина{cartCount>0 && <span className="badge">{cartCount}</span>}</a>
-          <a className={tab==='profile' ? 'active' : ''} onClick={() => setTab('profile')}><span className="i profile" />Профиль</a>
-        </nav>
-      )}
+      <nav className="wb-bottom" style={{ display: ready ? 'grid' : 'none' }}>
+        <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}><span className="i home" />Главная</a>
+        <a className={tab==='catalog' ? 'active' : ''} onClick={() => setTab('catalog')}><span className="i catalog" />Каталог</a>
+        <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}><span className="i cart" />Корзина{cartCount>0 && <span className="badge">{cartCount}</span>}</a>
+        <a className={tab==='profile' ? 'active' : ''} onClick={() => setTab('profile')}><span className="i profile" />Профиль</a>
+      </nav>
     </div>
   )
 }

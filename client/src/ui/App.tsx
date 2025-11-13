@@ -6,6 +6,7 @@ import type { Product } from './Marketplace'
 import { Catalog } from './Catalog'
 import { ProductDetail } from './ProductDetail'
 import type { ProductData } from '../data/products'
+import { PRODUCTS } from '../data/products'
 
 function isInTelegramWebApp(): boolean {
   const tg = (window as any).Telegram?.WebApp
@@ -20,6 +21,7 @@ export default function App() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [verified, setVerified] = useState<boolean>(false)
   const [ready, setReady] = useState<boolean>(false)
+  const [loadingProgress, setLoadingProgress] = useState<number>(0)
   const [tab, setTab] = useState<'home' | 'profile' | 'catalog' | 'cart'>('home')
   const [cart, setCart] = useState<Record<string, CartItem>>({})
   const [openProduct, setOpenProduct] = useState<ProductData | null>(null)
@@ -61,8 +63,66 @@ export default function App() {
     // Restore cart
     try { const saved = localStorage.getItem('ava_cart'); if (saved) setCart(JSON.parse(saved)) } catch {}
 
-    const t = setTimeout(() => setReady(true), 3000)
-    return () => clearTimeout(t)
+    // Preload images and resources
+    const imagesToPreload: string[] = []
+    
+    // Collect all product images
+    PRODUCTS.forEach(product => {
+      product.images.forEach(img => {
+        if (!imagesToPreload.includes(img)) {
+          imagesToPreload.push(img)
+        }
+      })
+    })
+    
+    // Add common images
+    const commonImages = [
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1584515933487-779824d29309?q=80&w=600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1600&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1600&auto=format&fit=crop',
+    ]
+    commonImages.forEach(img => {
+      if (!imagesToPreload.includes(img)) {
+        imagesToPreload.push(img)
+      }
+    })
+
+    let loaded = 0
+    const total = imagesToPreload.length + 1 // +1 for minimum time
+
+    const loadImage = (src: string): Promise<void> => {
+      return new Promise((resolve) => {
+        const img = new Image()
+        img.onload = () => {
+          loaded++
+          setLoadingProgress(Math.min((loaded / total) * 100, 90))
+          resolve()
+        }
+        img.onerror = () => {
+          loaded++
+          setLoadingProgress(Math.min((loaded / total) * 100, 90))
+          resolve()
+        }
+        img.src = src
+      })
+    }
+
+    Promise.all(imagesToPreload.map(loadImage)).then(() => {
+      setLoadingProgress(100)
+      setTimeout(() => setReady(true), 500)
+    })
+
+    // Minimum loading time
+    const minTime = setTimeout(() => {
+      if (loaded < total - 1) {
+        setLoadingProgress(90)
+      }
+    }, 2000)
+
+    return () => {
+      clearTimeout(minTime)
+    }
   }, [])
 
   // Persist cart
@@ -116,8 +176,8 @@ export default function App() {
             <div className="gradient-orb orb-1"></div>
             <div className="gradient-orb orb-2"></div>
             <div className="gradient-orb orb-3"></div>
+            <div className="brand">avastore</div>
           </div>
-          <div className="brand">avastore</div>
         </div>
       )
     }

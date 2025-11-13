@@ -31,22 +31,24 @@ export default function App() {
       try {
         const tg = (window as any).Telegram?.WebApp
         if (!tg) {
-          console.warn('[App] Telegram WebApp not available')
+          // Telegram WebApp not available (running in browser, not Telegram)
           return
         }
         
-        console.log('[App] Telegram WebApp found:', tg)
+        // Only log in development
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[App] Telegram WebApp found')
+        }
+        
         tg.ready?.()
         tg.expand?.()
         tg.MainButton?.hide?.()
         
         // Get user data from Telegram WebApp (primary source)
         const unsafe = tg.initDataUnsafe
-        console.log('[App] Telegram initDataUnsafe:', unsafe)
         
         if (unsafe?.user) {
           const user = unsafe.user
-          console.log('[App] Telegram user data:', user)
           
           setUserId(user.id ?? null)
           setUsername(user.username ?? null)
@@ -56,21 +58,16 @@ export default function App() {
           const lastName = user.last_name || ''
           const fullName = [firstName, lastName].filter(Boolean).join(' ').trim()
           const display = fullName || user.username || (user.id ? `User ${user.id}` : null)
-          console.log('[App] Setting displayName:', display)
           setDisplayName(display)
           
           // Get photo URL
           if (user.photo_url) {
-            console.log('[App] Setting photoUrl from user.photo_url:', user.photo_url)
             setPhotoUrl(user.photo_url)
           } else if (user.username) {
             // Fallback: try to get photo from Telegram CDN
             const fallbackPhoto = `https://t.me/i/userpic/160/${user.username}.jpg`
-            console.log('[App] Setting photoUrl from username fallback:', fallbackPhoto)
             setPhotoUrl(fallbackPhoto)
           }
-        } else {
-          console.warn('[App] No user data in initDataUnsafe')
         }
       
         // Optional: verify with server (but don't block on it)
@@ -97,13 +94,15 @@ export default function App() {
                 }
               }
             })
-            .catch((e) => {
-              console.warn('[App] Server verification failed:', e)
-              // Server verification failed, but we already have data from initDataUnsafe
+            .catch(() => {
+              // Server verification failed silently
             })
         }
       } catch (e) {
-        console.error('[App] Error getting Telegram data:', e)
+        // Silently handle errors - app should work even without Telegram
+        if (process.env.NODE_ENV === 'development') {
+          console.error('[App] Error getting Telegram data:', e)
+        }
       }
     }
     
@@ -115,19 +114,19 @@ export default function App() {
     if (tg) {
       // Try again after a short delay in case data wasn't ready
       const retryTimeout = setTimeout(() => {
-        console.log('[App] Retrying Telegram data load...')
         loadTelegramData()
       }, 500)
       
-      tg.onEvent?.('ready', () => {
-        console.log('[App] Telegram ready event fired')
+      const handleReady = () => {
         loadTelegramData()
-      })
+      }
+      
+      tg.onEvent?.('ready', handleReady)
       
       return () => {
         clearTimeout(retryTimeout)
         if (tg) {
-          tg.offEvent?.('ready', loadTelegramData)
+          tg.offEvent?.('ready', handleReady)
         }
       }
     }

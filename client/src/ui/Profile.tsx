@@ -16,7 +16,10 @@ const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent(`
 `)
 
 export function Profile({ displayName, username, photoUrl }: ProfileProps) {
-  console.log('[Profile] Received props:', { displayName, username, photoUrl })
+  // Only log in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Profile] Received props:', { displayName, username, photoUrl })
+  }
   
   // Telegram avatar fallback chain: photo_url -> username -> default
   const avatar = useMemo(() => {
@@ -28,7 +31,10 @@ export function Profile({ displayName, username, photoUrl }: ProfileProps) {
   // Show name or username, never "Гость" if we have any data
   const name = displayName || (username ? `@${username}` : null) || 'Гость'
   
-  console.log('[Profile] Computed:', { name, avatar })
+  // Only log in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Profile] Computed:', { name, avatar })
+  }
   
   const [avatarSrc, setAvatarSrc] = useState(() => avatar)
   const [avatarError, setAvatarError] = useState(false)

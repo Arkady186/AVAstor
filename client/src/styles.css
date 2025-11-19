@@ -353,8 +353,141 @@ body {
 .home-header { padding: 12px 16px; background: #fff; border-bottom: 1px solid rgba(0,0,0,.08); }
 .home-search { display: grid; grid-template-columns: 24px 1fr 24px; align-items: center; gap: 8px; padding: 10px 12px; background: #f3f3f6; border-radius: 12px; }
 .home-search input { background: transparent; border: 0; outline: none; color: #111; }
-.ad-banner { position: relative; height: 180px; margin: 12px 16px; border-radius: 16px; background: linear-gradient(135deg, #ff6b9d, #c44569); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 18px; }
-.ad-label { position: absolute; bottom: 8px; right: 8px; background: rgba(255,255,255,.9); color: #111; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+.ad-banner { display: none; }
+.ad-label { display: none; }
+
+/* FEELDAY landing */
+.feelday-hero {
+  padding: 24px 18px 20px;
+  background: radial-gradient(circle at top left, #ff7aa2 0%, #ff5f8a 35%, #ff7c5f 65%, #fff 100%);
+  border-radius: 18px;
+  margin-bottom: 16px;
+  color: #111;
+}
+.feelday-logo {
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.feelday-sub {
+  font-size: 13px;
+  color: #2f2f33;
+  margin-bottom: 14px;
+}
+.feelday-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.feelday-btn {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.12);
+  font-size: 13px;
+}
+.feelday-btn.primary {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+  font-weight: 600;
+}
+.feelday-btn.ghost {
+  background: rgba(255,255,255,0.9);
+  color: #111;
+}
+.feelday-scroll-hint {
+  font-size: 18px;
+  color: rgba(0,0,0,0.4);
+}
+.feelday-section {
+  padding: 16px 18px 20px;
+}
+.feelday-section.muted {
+  background: #f4f4f6;
+}
+.feelday-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: #111;
+}
+.feelday-text {
+  font-size: 13px;
+  color: #4a4a4f;
+  margin: 0;
+  line-height: 1.5;
+}
+.feelday-services {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.feelday-card {
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.feelday-card h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.feelday-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #4a4a4f;
+}
+.feelday-card.small {
+  font-size: 12px;
+}
+.feelday-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #4a4a4f;
+}
+.feelday-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 18px;
+  background: #111;
+  color: #fff;
+}
+.feelday-stat .num {
+  font-weight: 800;
+  font-size: 16px;
+}
+.feelday-stat .label {
+  font-size: 11px;
+  opacity: 0.8;
+  max-width: 80px;
+}
+.feelday-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.feelday-footer {
+  padding: 14px 18px 22px;
+  font-size: 11px;
+  color: #8a8a90;
+  text-align: left;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+@media (min-width: 720px) {
+  .feelday-services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .feelday-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
 /* Catalog Page */
 .catalog-page { padding: 0; background: #ffffff; }

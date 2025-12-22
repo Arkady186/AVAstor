@@ -1,0 +1,655 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeelDay - Студия художественной татуировки</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="af5ac0.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basiclightbox@5.0.4/dist/basicLightbox.min.css">
+</head>
+<body>
+<style>
+@keyframes neonFlickerSoft {
+  0%, 100% {
+    text-shadow:
+      0 0 6px #da77f2,
+      0 0 12px #da77f2,
+      0 0 24px #da77f2,
+      0 0 48px #da77f2;
+    opacity: 1;
+  }
+
+  45% {
+    text-shadow:
+      0 0 2px #da77f2,
+      0 0 4px #da77f2,
+      0 0 8px #da77f2,
+      0 0 16px #da77f2;
+    opacity: 0.75;
+  }
+
+  60% {
+    text-shadow:
+      0 0 0px #da77f2;
+    opacity: 0.4;
+  }
+
+  70% {
+    text-shadow:
+      0 0 10px #da77f2,
+      0 0 20px #da77f2,
+      0 0 40px #da77f2;
+    opacity: 1;
+  }
+
+  80% {
+    text-shadow:
+      0 0 4px #da77f2,
+      0 0 8px #da77f2;
+    opacity: 0.6;
+  }
+}
+
+.neon-glow {
+  animation: neonFlickerSoft 4s ease-in-out infinite;
+}
+/* CSS */
+.video-background {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.video-background video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 1;
+}
+
+.video-background .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* затемнение */
+  z-index: 2;
+}
+
+.video-background .content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  color: white;
+  padding-top: 10%;
+}
+
+</style>
+
+  <section class="banner">
+<!-- HTML -->
+<div class="video-background">
+  <video autoplay="" muted="" loop="" playsinline="">
+    <source src="video.MP4" type="video/mp4">
+    Ваш браузер не поддерживает видео.
+  </video>
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="container">
+      <center>
+	  <div class="logo" style="text-align: center;"><img src="af5ac0.jpg" alt="FEELDAY Logo" style="width: 150px;height: 150px;border-radius: 50%;"></div>
+	<h1 class="has-rtl is-heading" style="text-align: center;color: rgb(218, 119, 242) !important;font-size: 50px;margin: 0;">FEELDAY</h1>
+
+    <p class="tagline" style="font-size: 20px;font-weight: 600;">Студия художественной татуировки<br>‌г. Казань, ул. Четаева 20</p>
+      <div>
+        <a href="https://t.me/feelday_kzn" target="_blank" aria-label="Telegram" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fab fa-telegram"></i></a>
+        <a href="https://vk.com/feelday_kzn" target="_blank" aria-label="VK" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fab fa-vk"></i></a>
+		<a href="whatsapp://send?phone=79935535998&amp;text=Здравствуйте%2C%20пишу%20с%20вашего сайта.%20Нужна%20консультация." target="_blank" aria-label="WhatsApp" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fa fab fa-whatsapp"></i></a>
+      </div>
+<br>
+		<div class="block-text has-rtl" block_id="878f4850b2e842b3811b435364d01e65" account="[object Object]" index="3" page_id="14456877" device-class="lg" style="text-align: center; line-height: var(--theme-text-lineheight-md); font-size: var(--theme-text-size-md); letter-spacing: var(--theme-text-letterspacing-md);">Создаем уникальные татуировки, которые говорят за тебя</div>
+		<br>
+      <a href="tel:+79935535998" class="btn" style="text-decoration: auto;width: 100%; max-width: 360px;"><i class="fas fa-phone"></i> Проконсультироваться</a>
+      <a href="whatsapp://send?phone=79935535998&amp;text=Здравствуйте%2C%20пишу%20с%20вашего сайта.%20Нужна%20консультация." class="btn-outline" style="text-decoration: auto;width: 100%; max-width: 360px;"><i class="fas fa-comments"></i> ОСТАВИТЬ ЗАЯВКУ</a>
+		<p style="font-size: 75px;color: #da77f2;font-weight: 800;margin: 0;">‌↓</p>
+	  </center>
+    </div>
+  </div>
+</div>
+
+  </section>
+<br>
+  <section class="faq">
+    <div class="container">
+      <details open="">
+        <summary>КАКИЕ УСЛУГИ МЫ ПРЕДОСТАВЛЯЕМ ?</summary>
+        <div class="faq-content">
+          <p>Разработка тату эскиза с учетом всех пожеланий,<br>3D-визуализация на ваших фото.</p>
+          <p><strong>КОНСУЛЬТАЦИЯ БЕСПЛАТНО</strong>, а также:</p>
+          <p>Сориентируем ценник тату за 6 минут.</p>
+          <p>Тату обучение с получением официального сертификата: цена за обучение 20.000 или 40.000 рублей, разница между ними в объеме практической работы ученика.</p>
+          <p>+ Наши салоны: TATTOOCLUB21RU — 6 лет</p>
+          <p>ТАЛИСМАН студия — 15 лет на рынке</p>
+        </div>
+      </details>
+      <details>
+        <summary>КАК УЗНАТЬ СТОИМОСТЬ ТАТУ ?</summary>
+        <div class="faq-content">
+          <p>Пришли нам часть тела, эскиз и размер желаемой татуировки.</p>
+
+<p>Или просто опиши свой запрос который ты держишь уже долгое время.</p>
+<p>Не пугайся вопроса от администратора: В какой бюджет хотите уложиться. Этот вопрос нам помогает понять на кого из 6 мастеров мы можем тебя записать, кому-то важно качество тату, кому-то скорость, а некоторым цена в приоритете. Чем больше ты расскажешь о своей идее, тем лучше мы ее реализуем.</p>
+        </div>
+      </details>
+      <details>
+        <summary>До скольки мы работаем ?</summary>
+        <div class="faq-content">
+<p>Мастера по тату работают каждый день с 10:00 до 23:00. Есть дежурные мастера которые находятся в студии каждый день посменно меняются для того чтоб вы могли придти в любой день без записи</p>
+        </div>
+      </details>
+	  <center>
+	  <a href="https://uwvg0154.uds.app/c/join?ref=gbfa1149" target="_blank"><img src="promo2.jpg" style="width: 100%; max-width: 500px;"></a><br>
+	  <a target="_blank" href="https://uwvg0154.uds.app/c/join?ref=gbfa1149" style="    margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 20px;border-radius: 10px;">
+		ПЕРЕЙТИ И ПОЛУЧИТЬ <i class="fa fa-gift" aria-hidden="true"></i> 1000 
+		</a>
+	  </center>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="container">
+		<center>
+		<figure style="margin: 0;">
+		  <svg role="none" data-mode="stroke" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" stroke-width="1" stroke="#da77f2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<rect x="3" y="4" width="18" height="12" rx="1"></rect>
+			<path d="M7 20h10m-8-4v4"></path>
+			<path d="M15 16v4m-6-8V8m3 4v-1m3 1v-2"></path>
+			<path d="M12 12v-1"></path>
+		  </svg>
+		</figure>
+		<p style="color: #da77f2;margin: 0;font-weight: 700;font-size: 19px;">Статистика</p>
+		<p style="margin: 0;">Количество мастеров: 7</p>
+		<p style="margin: 0;">Положительных отзывов: 10.000</p>
+		<p style="margin: 0;">Количество студий: 5</p>
+		<p style="margin: 0;">Наши филлиалы: Казань, Новочебоксарск, Йошкар-Ола, Чебоксары</p>
+		<br>
+		<figure style="margin: 0;">
+		<svg role="none" data-mode="stroke" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" stroke-width="1" stroke="#da77f2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+		<circle cx="12" cy="9" r="6"></circle><path transform="rotate(330 12 9)" d="M9 14.2V21l3-2 3 2v-6.8"></path><path transform="rotate(30 12 9)" d="M9 14.2V21l3-2 3 2v-6.8"></path>
+		</svg>
+		</figure>
+		<p style="color: #da77f2;margin: 0;font-weight: 700;font-size: 19px;">Более 15000 довольных клиентов</p>
+		<p style="margin: 0;">Средний балл 5,0 — максимальная оценка среди тату-салонов в Казани.</p>
+		<p style="margin: 0;">Опыт наших мастеров более 7 лет.</p>
+		<h3 class="block-text has-rtl is-heading" block_id="bbd1e9138c17" account="[object Object]" index="1" page_id="14456877" device-class="lg" style="text-align: center; font-size: 25px; color: rgb(218, 119, 242) !important;"><b>Больше отзывов<br>‌↓</b></h3>
+		<a target="_blank" href="https://yandex.ru/maps/org/feel_day/244677742375/?ll=49.131225%2C55.823388&amp;z=16.79" style="    margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 20px;border-radius: 10px;">
+		Yandex
+		</a>
+		<a target="_blank" href="https://go.2gis.com/y6JQD" style="    margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 20px;border-radius: 10px;">
+		2GIS
+		</a>
+		<a target="_blank" href="https://maps.app.goo.gl/ypSEuuh57qU82vFk9" style="    margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 20px;border-radius: 10px;">
+		Google
+		</a>
+		</center>
+    </div>
+  </section>
+
+  <section class="whatsme">
+    <div class="container">
+		<center>
+		<h2 class="block-text has-rtl is-heading" block_id="b542d93fb4fb" account="[object Object]" index="6" page_id="14456877" device-class="lg" style="text-align: center; color: rgb(255, 255, 255) !important; --theme-heading-font-family: 'Russo One',sans-serif; --theme-heading-font-weight: 700; --theme-heading-font-weight-bold: 700;"><b>ПОЧЕМУ МЫ?</b></h2>
+		<div class="block-text has-rtl" block_id="b70242a95d32" account="[object Object]" index="0" page_id="14456877" device-class="lg" style="font-size: 19px;
+    font-weight: 700;color: rgb(218, 119, 242) !important; --theme-font-family: 'Russo One',sans-serif; ">
+		-У нас стерильно и&nbsp;безопасно<br>
+		-Тату любой сложности<br>
+		-Запись в&nbsp;день обращения<br>
+		-Рассрочка «0%» от 6 до 12 месяцев <br>
+		-Обучение с&nbsp;нуля в Feel Day
+		</div>
+		</center>
+		<hr>
+    </div>
+  </section>
+
+  <style>
+    .swiper {
+      width: 100%;
+      padding: 40px 0;
+    }
+
+    .swiper-slide {
+      border-radius: 16px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease;
+    }
+
+    .swiper-slide img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 16px;
+    }
+
+    .card-content h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .card-content p {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: white;
+    }
+  </style>
+
+  <section class="team">
+    <div class="container">
+      <center><h2 style="color: #da77f2;">НАША КОМАНДА</h2></center>
+
+    <div class="swiper masters-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+		<a href="images/workers/1.jpg" class="slide-link">
+			<img src="images/workers/1.jpg">
+		</a>
+		  <div class="card-content">
+			<h3>Марина</h3>
+			<p>Опыт работы 5 лет. Работает во всех стилях. Предпочтительно реализм</p>
+		  </div>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/workers/2.jpg" class="slide-link">
+			<img src="images/workers/2.jpg">
+		</a>
+      <div class="card-content">
+        <h3>Артур</h3>
+        <p>Опыт работы 5 лет. Работает во всех стилях. Предпочтительно реализм</p>
+      </div>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/workers/3.jpg" class="slide-link">
+			<img src="images/workers/3.jpg">
+		</a>
+      <div class="card-content">
+        <h3>Анастасия</h3>
+        <p>Опыт работы 3 года. Работает с мини-тату, японским стилем, ботаникой и тд. Не берется за реализм</p>
+      </div>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/workers/4.jpg" class="slide-link">
+			<img src="images/workers/4.jpg">
+		</a>
+      <div class="card-content">
+        <h3>Настя</h3>
+        <p>Опыт работы 3 года. Работает с мини-тату, японским стилем, ботаникой и тд. Не берется за реализм</p>
+      </div>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/workers/5.jpg" class="slide-link">
+			<img src="images/workers/5.jpg">
+		</a>
+      <div class="card-content">
+        <h3>Виктория</h3>
+        <p>Опыт работы 4 года. Специалист по тонким и аккуратным линиям. Работает в стилях: мини, микрореализм, киберпанк,аниме,хорор, олд скул</p>
+      </div>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/workers/6.jpg" class="slide-link">
+			<img src="images/workers/6.jpg">
+		</a>
+      <div class="card-content">
+        <h3>Альберт</h3>
+        <p>Опыт работы 4 года. Гравюра,минимализм,лайнворк, олд скул, трайбл,полинейзия,традишнл,блекворк,этника,скетч стайл,графика,леттеринг, геометрия,кельтский,абстракция</p>
+      </div>
+		</div>
+      </div>
+    </div>
+    
+<hr>
+    </div>
+  </section>
+
+  <section class="portfolio">
+    <div class="container">
+      <center><h2 style="color: #da77f2;"><i class="fas fa-image"></i> НАШИ РАБОТЫ</h2></center>
+
+    <div class="swiper works-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+		<a href="images/work/1.jpg" class="slide-link">
+			<img src="images/work/1.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/2.jpg" class="slide-link">
+			<img src="images/work/2.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/3.jpg" class="slide-link">
+			<img src="images/work/3.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/4.jpg" class="slide-link">
+			<img src="images/work/4.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/5.jpg" class="slide-link">
+			<img src="images/work/5.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/6.jpg" class="slide-link">
+			<img src="images/work/6.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/7.jpg" class="slide-link">
+			<img src="images/work/7.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/work/8.jpg" class="slide-link">
+			<img src="images/work/8.jpg">
+		</a>
+		</div>
+      </div>
+    </div>
+    
+		<p>Мы знаем, что татуировка — это не просто рисунок на теле. Это выражение вашей индивидуальности, истории, частичка вашего «я». Поэтому мы стремимся создать для вас абсолютно уникальные, эстетически привлекательные и значимые работы искусства. Наше творчество никогда не зациклено на трендах или моде, мы уделяем особое внимание качеству и деталям. Вы можете быть уверены, что у нас получите не просто татуировку, а настоящее произведение искусства, которое будет искренне радовать вас на протяжении всей жизни.</p>
+		<hr>
+
+<center><h2 style="color: #da77f2;">ОБУЧЕНИЯ И МЕРОПРИЯТИЯ</h2></center>
+    <div class="swiper education-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+		<a href="images/events/1.jpg" class="slide-link">
+			<img src="images/events/1.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/events/2.jpg" class="slide-link">
+			<img src="images/events/2.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/events/3.jpg" class="slide-link">
+			<img src="images/events/3.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/events/4.jpg" class="slide-link">
+			<img src="images/events/4.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/events/5.jpg" class="slide-link">
+			<img src="images/events/5.jpg">
+		</a>
+		</div>
+        <div class="swiper-slide">
+		<a href="images/events/6.jpg" class="slide-link">
+			<img src="images/events/6.jpg">
+		</a>
+		</div>
+      </div>
+    </div>
+    
+
+      <details>
+        <summary style="cursor: pointer;">ПОДРОБНЕЕ ОБ ОБУЧЕНИИ</summary>
+        <div class="faq-content">
+          <p>Мы являемся школой обучения по тату индустрии базовых знаний, предоставляя официальные сертификаты об окончании.<br>
+<br>
+• Курс обучения состоит из основной базы знаний<br>
+— 4 дней и 25 часами работы с учениками.<br>
+<br>
+Из них 1 день — плотная теория и практика<br>
+— изучаем сайты<br>
+— товары и анализ рынка<br>
+— продвижение-маркетинг<br>
+— строение тату машинки<br>
+— рисование и перевод эскизов<br>
+— набиваем тату на искусственной коже<br>
+— все это до 8 часов + подарок от студии: Чек лист с собранной информацией выгодных товаров и ссылки на них.<br>
+<br>
+• 2 день теория и практика:<br>
+— изучение структуры кожи<br>
+— как избежать травматизацию<br>
+— разбор разных стилей и правильное построение<br>
+— работа на искусственной коже<br>
+— умение работать в команде<br>
+— смешивание красок<br>
+— ответы на вопросы учеников<br>
+— Изучение трех стилей тату на искусственной коже<br>
+— и это еще не все! Большие подробности вы узнаете на обучении!<br>
+<br>
+3−4 дни — тату на людях в стиле минимализма с напылением вип шейдинга.<br>
+Каждая Группа состоит из 2−5 учеников и 2−5 зрителей<br>
+Через нашу студию прошло более 50 учеников<br>
++ Опыт наших мастеров с опытом выше 5 лет<br>
+<br>
+• Художественные навыки иметь не обязательно, все приходит постепенно, ровно так же начинали все наши мастера!<br>
+• Главное иметь желание и целеустремлённость!<br>
+<br>
+Обучение с получением официального сертификата с печатями.</p>
+        </div>
+      </details>
+	</div>
+  </section>
+
+  <section class="map">
+    <div class="container">
+      <center><h2 style="color: #da77f2;"><i class="fas fa-map-marker-alt"></i> Наше расположение</h2></center>
+      <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A2104d755603ab123fd498784e084040d1ca3bf9bbc74fd955f0bdb58828558aa&amp;source=constructor" width="100%" height="400" frameborder="0"></iframe>
+		<br>
+		<a target="_blank" href="index.html" style="margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 17px;border-radius: 10px;">
+		<center>г. Казань, ул. Четаева 20</center>
+		</a>
+		<a target="_blank" href="https://cheb.feelday.ru/" style="margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 17px;border-radius: 10px;">
+		<center>г. Чебоксары, просп. Максима Горького, 26</center>
+		</a>
+		<a target="_blank" href="https://yoshka.feelday.ru/" style="margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 17px;border-radius: 10px;">
+		<center>г. Йошкар-Ола, Первомайская улица, 80</center>
+		</a>
+		<a target="_blank" href="https://nchk.feelday.ru/" style="margin-bottom: 15px;width: 100%;display: block;border: 2px solid #da77f2;padding: 20px 0px;color: #da77f2;text-decoration: auto;text-transform: uppercase;font-weight: 700;font-size: 17px;border-radius: 10px;">
+		<center>г. Новочебоксарск, улица 10-й Пятилетки, 46А</center>
+		</a>
+		<hr>
+		<center>
+		<h2 style="color: #da77f2;">Контакты</h2>
+		<p>Звоните или пишите в мессенджеры</p>
+      <div>
+        <a href="https://t.me/feelday_kzn" target="_blank" aria-label="Telegram" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fab fa-telegram"></i></a>
+        <a href="https://vk.com/feelday_kzn" target="_blank" aria-label="VK" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fab fa-vk"></i></a>
+		<a href="whatsapp://send?phone=79935535998&amp;text=Здравствуйте%2C%20пишу%20с%20вашего сайта.%20Нужна%20консультация." target="_blank" aria-label="WhatsApp" style="font-size: 35px;color: #da77f2;margin: 0px 7px;"><i class="fa fab fa-whatsapp"></i></a>
+      </div>
+		</center>
+		<hr>
+	</div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p></p><div class="block-text has-rtl" block_id="b51f25aafe0c" account="[object Object]" index="0" page_id="14456877" device-class="lg" style="text-align: center; line-height: var(--theme-text-lineheight-md); font-size: var(--theme-text-size-md); letter-spacing: var(--theme-text-letterspacing-md); color: rgb(255, 255, 255) !important;">
+	  ИП Клементьев Кирилл Леонидович<br>
+ИНН 212712062718<br>
+Казань, Четаева, д.20<br>
+Студия Feel Day Tattoo основана с 2017г.
+	  </div><p></p>
+<center><a target="_blank" href="https://disk.yandex.com.am/i/QV4MN07CBtTxVg" class="instagram-btn" style="width: 100%; max-width: 360px;">
+  <i class="fa fa-file"></i>
+  <span>Публичная оферта</span>
+</a></center>
+	</div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script src="script.js/index.html"></script>
+<script>
+function createSlider(containerId, dotsId, intervalTime = 5000) {
+  const slides = document.querySelectorAll(`#${containerId} .slide`);
+  const dotsContainer = document.getElementById(dotsId);
+  let currentIndex = 0;
+
+  // Очистка точек, если они уже есть
+  dotsContainer.innerHTML = "";
+
+  // Генерация точек
+  slides.forEach((_, index) => {
+    const dot = document.createElement("span");
+    dot.classList.add("dot");
+    dot.addEventListener("click", () => {
+      currentIndex = index;
+      showSlide();
+      resetAuto();
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = dotsContainer.querySelectorAll(".dot");
+
+  function showSlide() {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === currentIndex);
+    });
+    dots.forEach(dot => dot.classList.remove("active"));
+    if (dots[currentIndex]) dots[currentIndex].classList.add("active");
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    showSlide();
+  }
+
+  let autoSlideInterval = setInterval(nextSlide, intervalTime);
+
+  function resetAuto() {
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(nextSlide, intervalTime);
+  }
+
+  showSlide();
+}
+
+// Примеры вызова для нескольких слайдеров
+
+createSlider("masters-slider", "masters-dots", 10000);
+createSlider("works-slider", "works-dots", 5000);
+createSlider("piercing-slider", "piercing-dots", 5000);
+createSlider("education-slider", "education-dots", 5000);
+
+</script>
+ <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/basiclightbox@5.0.4/dist/basicLightbox.min.js"></script>
+  <script>
+new Swiper('.swiper', {
+  slidesPerView: 2.5,
+  spaceBetween: 20,
+  loop: true,
+  speed: 4000, // Плавность
+  autoplay: {
+    delay: 1, // Минимальная задержка (почти непрерывно)
+    disableOnInteraction: false, // После клика — продолжает крутиться
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  grabCursor: true,
+  allowTouchMove: true, // ❗ включаем возможность двигать мышкой/пальцем
+  breakpoints: {
+    768: {
+      slidesPerView: 3,
+    },
+    1024: {
+      slidesPerView: 4,
+    }
+  }
+});
+
+  </script>
+<script>
+  document.querySelectorAll('.slide-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const imgSrc = this.getAttribute('href');
+      const instance = basicLightbox.create(`
+        <img src="${imgSrc}" style="max-width: 90vw; max-height: 90vh;" />
+      `);
+      instance.show();
+    });
+  });
+</script>
+
+<script>
+  const swiperConfigs = [
+    { selector: '.swiper-director', slidesPerView: 2.5 },
+    { selector: '.swiper-masters', slidesPerView: 2.5 },
+    { selector: '.swiper-works', slidesPerView: 2.5 },
+    { selector: '.swiper-piercing', slidesPerView: 2.5 },
+    { selector: '.swiper-education', slidesPerView: 2.5 },
+  ];
+
+  swiperConfigs.forEach(config => {
+    new Swiper(config.selector, {
+      slidesPerView: config.slidesPerView,
+      spaceBetween: 20,
+      loop: true,
+      speed: 4000,
+      autoplay: {
+        delay: 1,
+        disableOnInteraction: false,
+      },
+      grabCursor: true,
+      allowTouchMove: true,
+      breakpoints: {
+        768: { slidesPerView: 3 },
+        1024: { slidesPerView: 4 },
+      },
+      navigation: {
+        nextEl: config.selector + ' .swiper-button-next',
+        prevEl: config.selector + ' .swiper-button-prev',
+      }
+    });
+  });
+</script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104090077', 'ym');
+
+    ym(104090077, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/104090077" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+</body></html>

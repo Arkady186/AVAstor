@@ -9,12 +9,16 @@
     "postinstall": "npm --prefix client ci || npm --prefix client install && npm --prefix client run build",
     "build": "npm --prefix client run build",
     "dev": "node server/index.js",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "scrape:feelday": "node scrape-feelday.mjs"
   },
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.19.2",
     "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "website-scraper": "^5.3.1"
   }
 }
 

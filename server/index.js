@@ -30,6 +30,12 @@ const distDir = path.join(__dirname, '..', 'client', 'dist');
 app.use('/assets', express.static(path.join(distDir, 'assets'), { maxAge: '1y', immutable: true }));
 app.use(express.static(distDir, { index: false }));
 
+// Serve mirrored FEELDAY site directly from public (so it works even if Vite doesn't copy it to dist)
+const feeldayPublicDir = path.join(__dirname, '..', 'client', 'public', 'feelday');
+if (fs.existsSync(feeldayPublicDir)) {
+  app.use('/feelday', express.static(feeldayPublicDir));
+}
+
 // Disable server-side block page entirely
 app.use((req, res, next) => next());
 
@@ -103,7 +109,7 @@ app.get('/', (req, res) => {
   }
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   return res.status(200).send(`<!doctype html>
-<html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>avastore</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0b0f14;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif"><div><div style="opacity:.75;margin-bottom:8px">avastore</div><div style="opacity:.6">Сервис запускается, попробуйте обновить через пару секунд…</div></div></body></html>`);
+<html lang="ru"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>INK&ARTstudio</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a1a;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif"><div><div style="opacity:.9;margin-bottom:8px;font-weight:900;font-size:24px;letter-spacing:1px">INK&ART<span style="color:#6a2bbb">studio</span></div><div style="opacity:.6">Сервис запускается, попробуйте обновить через пару секунд…</div></div></body></html>`);
 });
 
 app.get('*', (req, res) => {

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Marketplace } from './Marketplace'
 import { Profile } from './Profile'
-import { Cart, type CartItem } from './Cart'
-import type { Product } from './Marketplace'
+import { Cart } from './Cart'
 import { Catalog } from './Catalog'
-import { ProductDetail } from './ProductDetail'
-import type { ProductData } from '../data/products'
+import { Booking } from './Booking'
+import { MasterDetail } from './MasterDetail'
+import { PortfolioDetail } from './PortfolioDetail'
+import type { Master, PortfolioItem, Appointment } from '../data/studio'
 
 function isInTelegramWebApp(): boolean {
   const tg = (window as any).Telegram?.WebApp
@@ -21,8 +22,11 @@ export default function App() {
   const [verified, setVerified] = useState<boolean>(false)
   const [ready, setReady] = useState<boolean>(false)
   const [tab, setTab] = useState<'home' | 'profile' | 'catalog' | 'cart'>('home')
-  const [cart, setCart] = useState<Record<string, CartItem>>({})
-  const [openProduct, setOpenProduct] = useState<ProductData | null>(null)
+  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [openMaster, setOpenMaster] = useState<Master | null>(null)
+  const [openPortfolio, setOpenPortfolio] = useState<PortfolioItem | null>(null)
+  const [showBooking, setShowBooking] = useState<boolean>(false)
+  const [bookingMaster, setBookingMaster] = useState<Master | null>(null)
 
   useEffect(() => {
     setIsTelegram(isInTelegramWebApp())
@@ -31,11 +35,9 @@ export default function App() {
       try {
         const tg = (window as any).Telegram?.WebApp
         if (!tg) {
-          // Telegram WebApp not available (running in browser, not Telegram)
           return
         }
         
-        // Only log in development
         if (process.env.NODE_ENV === 'development') {
           console.log('[App] Telegram WebApp found')
         }
@@ -44,7 +46,6 @@ export default function App() {
         tg.expand?.()
         tg.MainButton?.hide?.()
         
-        // Get user data from Telegram WebApp (primary source)
         const unsafe = tg.initDataUnsafe
         
         if (unsafe?.user) {
@@ -53,24 +54,20 @@ export default function App() {
           setUserId(user.id ?? null)
           setUsername(user.username ?? null)
           
-          // Build display name: first_name + last_name, fallback to username, then User ID
           const firstName = user.first_name || ''
           const lastName = user.last_name || ''
           const fullName = [firstName, lastName].filter(Boolean).join(' ').trim()
           const display = fullName || user.username || (user.id ? `User ${user.id}` : null)
           setDisplayName(display)
           
-          // Get photo URL - prioritize photo_url, fallback to Telegram CDN
           if (user.photo_url) {
             setPhotoUrl(user.photo_url)
           } else if (user.username) {
-            // Use Telegram CDN for user avatar (higher resolution)
             const telegramAvatar = `https://t.me/i/userpic/320/${user.username}.jpg`
             setPhotoUrl(telegramAvatar)
           }
         }
       
-        // Optional: verify with server (but don't block on it)
         if (tg.initData) {
           fetch('/api/verify', {
             method: 'POST',
@@ -81,7 +78,6 @@ export default function App() {
             .then((j) => {
               if (j?.ok && j.user) {
                 setVerified(true)
-                // Update with server-verified data if available
                 if (j.user.first_name || j.user.username) {
                   const fullName = j.user.first_name ? [j.user.first_name, j.user.last_name].filter(Boolean).join(' ') : null
                   setDisplayName(fullName || j.user.username || displayName || `User ${j.user.id}`)
@@ -92,30 +88,23 @@ export default function App() {
                 if (j.user.photo_url) {
                   setPhotoUrl(j.user.photo_url)
                 } else if (j.user.username && !photoUrl) {
-                  // Fallback to Telegram CDN
                   setPhotoUrl(`https://t.me/i/userpic/320/${j.user.username}.jpg`)
                 }
               }
             })
-            .catch(() => {
-              // Server verification failed silently
-            })
+            .catch(() => {})
         }
       } catch (e) {
-        // Silently handle errors - app should work even without Telegram
         if (process.env.NODE_ENV === 'development') {
           console.error('[App] Error getting Telegram data:', e)
         }
       }
     }
     
-    // Try to load immediately
     loadTelegramData()
     
-    // Also listen for ready event in case Telegram loads later
     const tg = (window as any).Telegram?.WebApp
     if (tg) {
-      // Try again after a short delay in case data wasn't ready
       const retryTimeout = setTimeout(() => {
         loadTelegramData()
       }, 500)
@@ -138,54 +127,56 @@ export default function App() {
   }, [])
   
   useEffect(() => {
-    // Restore cart
-    try { const saved = localStorage.getItem('ava_cart'); if (saved) setCart(JSON.parse(saved)) } catch {}
+    // Restore appointments from localStorage
+    try {
+      const saved = localStorage.getItem('ink_appointments')
+      if (saved) {
+        setAppointments(JSON.parse(saved))
+      }
+    } catch {}
     
-    // Minimal loading time for bottom menu (icons are already in CSS)
-    // Just show beautiful animation for 2 seconds
+    // Minimal loading time
     const t = setTimeout(() => setReady(true), 2000)
     return () => clearTimeout(t)
   }, [])
 
-  // Persist cart
+  // Persist appointments
   useEffect(() => {
-    try { localStorage.setItem('ava_cart', JSON.stringify(cart)) } catch {}
-  }, [cart])
+    try {
+      localStorage.setItem('ink_appointments', JSON.stringify(appointments))
+    } catch {}
+  }, [appointments])
 
-  // Cart handlers
-  const addToCart = (p: Product) => {
-    setCart(prev => {
-      const cur = prev[p.id]
-      const nextQty = (cur?.qty || 0) + 1
-      return { ...prev, [p.id]: { ...p, qty: nextQty } }
-    })
+  const handleBookAppointment = () => {
+    setShowBooking(true)
+  }
+
+  const handleConfirmBooking = (appointmentData: Omit<Appointment, 'id' | 'status'>) => {
+    const newAppointment: Appointment = {
+      ...appointmentData,
+      id: `appt_${Date.now()}`,
+      status: 'pending',
+    }
+    setAppointments(prev => [...prev, newAppointment])
+    setShowBooking(false)
     setTab('cart')
   }
-  const addToCartWithSize = (p: ProductData, size?: string) => {
-    const id = size ? `${p.id}_${size}` : p.id
-    setCart(prev => {
-      const cur = prev[id]
-      const nextQty = (cur?.qty || 0) + 1
-      return { ...prev, [id]: { ...p, id, title: size ? `${p.title} • ${size}` : p.title, qty: nextQty } as any }
-    })
-    setTab('cart'); setOpenProduct(null)
-  }
-  const inc = (id: string) => setCart(prev => ({ ...prev, [id]: { ...prev[id], qty: prev[id].qty + 1 } }))
-  const dec = (id: string) => setCart(prev => {
-    const item = prev[id]
-    if (!item) return prev
-    const nextQty = item.qty - 1
-    const copy = { ...prev }
-    if (nextQty <= 0) { delete (copy as any)[id] } else { copy[id] = { ...item, qty: nextQty } }
-    return copy
-  })
-  const clear = () => setCart({})
-  const cartItems: CartItem[] = Object.values(cart)
-  const cartCount = cartItems.reduce((s, it) => s + it.qty, 0)
 
-  // Expose add to cart for Marketplace internal button
-  ;(window as any).__onAddToCart = addToCart
-  ;(window as any).__onOpenProduct = (p: ProductData) => setOpenProduct(p)
+  const handleCancelAppointment = (id: string) => {
+    setAppointments(prev => prev.map(a => 
+      a.id === id ? { ...a, status: 'cancelled' as const } : a
+    ))
+  }
+
+  const handleOpenMaster = (master: Master) => {
+    setOpenMaster(master)
+  }
+
+  const handleBookWithMaster = (master: Master) => {
+    setBookingMaster(master)
+    setOpenMaster(null)
+    setShowBooking(true)
+  }
 
   const content = useMemo(() => {
     if (!ready) {
@@ -198,7 +189,7 @@ export default function App() {
             <div className="gradient-orb orb-1"></div>
             <div className="gradient-orb orb-2"></div>
             <div className="gradient-orb orb-3"></div>
-            <div className="brand">feelday</div>
+            <div className="brand">INK&ARTstudio</div>
           </div>
           {userId && (
             <div className="loader-user-id">ID: {userId}</div>
@@ -208,13 +199,42 @@ export default function App() {
     }
     return (
       <div className="page">
-        {tab === 'home' && <Marketplace />}
-        {tab === 'profile' && <Profile displayName={displayName} username={username} photoUrl={photoUrl} />}
-        {tab === 'cart' && <Cart items={cartItems} onInc={inc} onDec={dec} onClear={clear} onSelectAll={() => {}} />}
-        {tab === 'catalog' && <Catalog />}
+        {tab === 'home' && (
+          <Marketplace
+            onOpenMaster={handleOpenMaster}
+            onOpenPortfolio={setOpenPortfolio}
+            onBookAppointment={handleBookAppointment}
+          />
+        )}
+        {tab === 'profile' && (
+          <Profile
+            displayName={displayName}
+            username={username}
+            photoUrl={photoUrl}
+            appointments={appointments}
+          />
+        )}
+        {tab === 'cart' && (
+          <Cart
+            appointments={appointments}
+            onCancel={handleCancelAppointment}
+          />
+        )}
+        {tab === 'catalog' && (
+          <Catalog
+            onOpenMaster={handleOpenMaster}
+            onOpenService={() => handleBookAppointment()}
+            onOpenPortfolio={setOpenPortfolio}
+            onBookAppointment={handleBookAppointment}
+          />
+        )}
       </div>
     )
-  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, cartItems, openProduct])
+  }, [isTelegram, ready, verified, userId, username, tab, displayName, photoUrl, appointments])
+
+  const upcomingCount = appointments.filter(a => 
+    a.status === 'pending' || a.status === 'confirmed'
+  ).length
 
   return (
     <div className="container">
@@ -225,17 +245,43 @@ export default function App() {
         <div className="glow glow-3" />
       </div>
       {content}
-      {openProduct && (
-        <ProductDetail product={openProduct} onClose={() => setOpenProduct(null)} onAdd={addToCartWithSize} />
+      {openMaster && (
+        <MasterDetail
+          master={openMaster}
+          onClose={() => setOpenMaster(null)}
+          onBook={handleBookWithMaster}
+        />
+      )}
+      {openPortfolio && (
+        <PortfolioDetail
+          item={openPortfolio}
+          onClose={() => setOpenPortfolio(null)}
+        />
+      )}
+      {showBooking && (
+        <Booking
+          onClose={() => {
+            setShowBooking(false)
+            setBookingMaster(null)
+          }}
+          onConfirm={handleConfirmBooking}
+        />
       )}
       <nav className="wb-bottom" style={{ display: ready ? 'grid' : 'none' }}>
-        <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}><span className="i home" />Главная</a>
-        <a className={tab==='catalog' ? 'active' : ''} onClick={() => setTab('catalog')}><span className="i catalog" />Каталог</a>
-        <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}><span className="i cart" />Корзина{cartCount>0 && <span className="badge">{cartCount}</span>}</a>
-        <a className={tab==='profile' ? 'active' : ''} onClick={() => setTab('profile')}><span className="i profile" />Профиль</a>
+        <a className={tab==='home' ? 'active' : ''} onClick={() => setTab('home')}>
+          <span className="i home" />Главная
+        </a>
+        <a className={tab==='catalog' ? 'active' : ''} onClick={() => setTab('catalog')}>
+          <span className="i catalog" />Каталог
+        </a>
+        <a className={tab==='cart' ? 'active' : ''} onClick={() => setTab('cart')}>
+          <span className="i cart" />Записи
+          {upcomingCount > 0 && <span className="badge">{upcomingCount}</span>}
+        </a>
+        <a className={tab==='profile' ? 'active' : ''} onClick={() => setTab('profile')}>
+          <span className="i profile" />Профиль
+        </a>
       </nav>
     </div>
   )
 }
-
-

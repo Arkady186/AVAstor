@@ -1,82 +1,120 @@
 import { useState } from 'react'
-import type { Product } from './Marketplace'
-
-export type CartItem = Product & { qty: number }
+import type { Appointment } from '../data/studio'
 
 type CartProps = {
-  items: CartItem[]
-  onInc: (id: string) => void
-  onDec: (id: string) => void
-  onClear: () => void
-  onSelectAll: (selected: boolean) => void
+  appointments: Appointment[]
+  onCancel?: (id: string) => void
 }
 
-export function Cart({ items, onInc, onDec, onClear, onSelectAll }: CartProps) {
-  const [selectedAll, setSelectedAll] = useState(false)
-  const displayItems = items.length > 0 ? items : []
-  const total = displayItems.reduce((s, it) => s + it.price * it.qty, 0)
-  const totalQty = displayItems.reduce((s, it) => s + it.qty, 0)
+export function Cart({ appointments, onCancel }: CartProps) {
+  const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'completed'>('all')
 
-  const handleSelectAll = () => {
-    const next = !selectedAll
-    setSelectedAll(next)
-    if (onSelectAll) onSelectAll(next)
+  const filteredAppointments = filter === 'all'
+    ? appointments
+    : appointments.filter(a => a.status === filter)
+
+  const getStatusLabel = (status: Appointment['status']) => {
+    switch (status) {
+      case 'pending': return 'Ожидает подтверждения'
+      case 'confirmed': return 'Подтверждена'
+      case 'completed': return 'Завершена'
+      case 'cancelled': return 'Отменена'
+    }
+  }
+
+  const getStatusColor = (status: Appointment['status']) => {
+    switch (status) {
+      case 'pending': return '#f39c12'
+      case 'confirmed': return '#2ecc71'
+      case 'completed': return '#95a5a6'
+      case 'cancelled': return '#e74c3c'
+    }
   }
 
   return (
     <div className="cart market market--white cart-page">
-
-      <div className="cart-actions">
-        <label className="cart-select-all">
-          <input type="checkbox" checked={selectedAll} onChange={handleSelectAll} />
-          Выбрать все
-        </label>
-        <button className="cart-actions-btn">Действия</button>
+      <div className="cart-header-section">
+        <h2 className="cart-page-title">Мои записи</h2>
+        <div className="cart-filters">
+          <button
+            className={`cart-filter-btn ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            Все
+          </button>
+          <button
+            className={`cart-filter-btn ${filter === 'pending' ? 'active' : ''}`}
+            onClick={() => setFilter('pending')}
+          >
+            Ожидают
+          </button>
+          <button
+            className={`cart-filter-btn ${filter === 'confirmed' ? 'active' : ''}`}
+            onClick={() => setFilter('confirmed')}
+          >
+            Подтверждены
+          </button>
+          <button
+            className={`cart-filter-btn ${filter === 'completed' ? 'active' : ''}`}
+            onClick={() => setFilter('completed')}
+          >
+            Завершены
+          </button>
+        </div>
       </div>
 
-      <div className="cart-delivery">
-        Доставка по клику из пункта выдачи — 0 ₽ →
-      </div>
-
-      {displayItems.length === 0 ? (
-        <div className="cart-empty">Ваша корзина пуста</div>
+      {filteredAppointments.length === 0 ? (
+        <div className="cart-empty">
+          {filter === 'all' 
+            ? 'У вас пока нет записей'
+            : `Нет записей со статусом "${getStatusLabel(filter as any)}"`}
+        </div>
       ) : (
         <div className="cart-items">
-          {displayItems.map(p => (
-            <div className="cart-item" key={p.id}>
-              <input type="checkbox" className="cart-check" defaultChecked />
-              {p.discount && (
-                <div className="cart-timer">01:09:56 ДО КОНЦА АКЦИИ</div>
-              )}
-              <div className="cart-item-img" style={{ backgroundImage: `url(${p.image})` }} />
-              <div className="cart-item-info">
-                <div className="cart-item-price">
-                  <span className="cart-price-new">{p.price} ₽</span>
-                  {p.originalPrice && <span className="cart-price-old">{p.originalPrice} ₽</span>}
+          {filteredAppointments.map(appointment => {
+            const date = new Date(appointment.date)
+            const dateStr = date.toLocaleDateString('ru-RU', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long'
+            })
+
+            return (
+              <div key={appointment.id} className="cart-item appointment-item">
+                <div className="appointment-status" style={{ backgroundColor: getStatusColor(appointment.status) }}>
+                  {getStatusLabel(appointment.status)}
                 </div>
-                <div className="cart-item-title">✓ {p.title}</div>
-                <div className="cart-item-delivery">Доставим завтра</div>
-                <div className="cart-item-refund">Бесплатный отказ при получении</div>
-                <div className="cart-item-actions">
-                  <div className="cart-qty">
-                    <button onClick={() => onDec(p.id)}>-</button>
-                    <span>{p.qty}</span>
-                    <button onClick={() => onInc(p.id)}>+</button>
+                <div className="appointment-content">
+                  <div className="appointment-service">{appointment.serviceTitle}</div>
+                  <div className="appointment-master">Мастер: {appointment.masterName}</div>
+                  <div className="appointment-date">
+                    📅 {dateStr} в {appointment.time}
                   </div>
-                  <button className="cart-buy">Купить</button>
+                  <div className="appointment-duration">⏱️ {appointment.duration} минут</div>
+                  {appointment.price > 0 && (
+                    <div className="appointment-price">
+                      💰 {appointment.price.toLocaleString('ru-RU')} ₽
+                    </div>
+                  )}
+                  {appointment.notes && (
+                    <div className="appointment-notes">
+                      <strong>Примечания:</strong> {appointment.notes}
+                    </div>
+                  )}
+                  {appointment.status !== 'cancelled' && appointment.status !== 'completed' && (
+                    <button
+                      className="appointment-cancel"
+                      onClick={() => onCancel?.(appointment.id)}
+                    >
+                      Отменить запись
+                    </button>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
-
-      <div className="cart-footer">
-        <button className="cart-checkout">К оформлению</button>
-        <div className="cart-summary">
-          {totalQty} шт., {total.toLocaleString('ru-RU')} ₽ с avastore Кошельком
-        </div>
-      </div>
     </div>
   )
 }

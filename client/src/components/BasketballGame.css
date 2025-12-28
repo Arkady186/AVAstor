@@ -9,6 +9,7 @@
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 .game-header {
@@ -16,21 +17,88 @@
   max-width: 400px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: flex-start;
+  margin-bottom: 16px;
   color: #fff;
+  gap: 16px;
+}
+
+.score-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .score {
   font-size: 24px;
   font-weight: 900;
   color: #fff;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
-.instructions {
-  font-size: 12px;
+.high-score {
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
-  text-align: right;
+  font-weight: 600;
+}
+
+.stats-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.level {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(255, 215, 0, 0.5);
+}
+
+.streak {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff6b6b;
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.score-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffd700;
+  text-shadow: 0 4px 16px rgba(255, 215, 0, 0.8);
+  animation: scorePop 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+@keyframes scorePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1) translateY(-50px);
+  }
 }
 
 .game-canvas {
@@ -40,42 +108,103 @@
   max-width: 100%;
   height: auto;
   display: block;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+              0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.power-bar-container {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 12px;
+  padding: 0 20px;
+}
+
+.power-bar-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 4px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.power-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.power-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4ecdc4, #44a08d, #ffd700, #ff6b6b);
+  border-radius: 4px;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  animation: powerGlow 1s ease-in-out infinite;
+}
+
+@keyframes powerGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
 }
 
 .game-footer {
   width: 100%;
   max-width: 400px;
-  margin-top: 20px;
+  margin-top: 16px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.game-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
 }
 
 .shoot-button {
-  padding: 16px 32px;
+  padding: 18px 40px;
   font-size: 18px;
   font-weight: 900;
-  background: #fff;
-  color: #1a1a2e;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   border: none;
   border-radius: 999px;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .shoot-button:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
 .shoot-button:active:not(:disabled) {
   transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
 }
 
 .shoot-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.shoot-button:not(:disabled):active {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 @media (max-width: 480px) {
@@ -89,8 +218,12 @@
     align-items: flex-start;
   }
   
-  .instructions {
-    text-align: left;
+  .stats-info {
+    align-items: flex-start;
+  }
+  
+  .shoot-button {
+    width: 100%;
+    padding: 16px;
   }
 }
-

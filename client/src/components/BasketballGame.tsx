@@ -61,42 +61,6 @@ export function BasketballGame() {
     resetBall()
   }, [resetBall])
 
-  useEffect(() => {
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      if (e.beta !== null && e.gamma !== null) {
-        setOrientation({
-          beta: e.beta, // наклон вперед/назад (-180 до 180)
-          gamma: e.gamma, // наклон влево/вправо (-90 до 90)
-        })
-      }
-    }
-
-    const handleMotion = (e: DeviceMotionEvent) => {
-      if (e.accelerationIncludingGravity) {
-        const { x, y, z } = e.accelerationIncludingGravity
-        const totalAcceleration = Math.sqrt(x! * x! + y! * y! + z! * z!)
-        
-        // Определяем встряхивание (ускорение > 15)
-        if (totalAcceleration > 15) {
-          const now = Date.now()
-          // Защита от множественных срабатываний (минимум 500мс между бросками)
-          if (now - lastShakeTime.current > 500) {
-            lastShakeTime.current = now
-            handleShoot()
-          }
-        }
-      }
-    }
-
-    window.addEventListener('deviceorientation', handleOrientation as EventListener)
-    window.addEventListener('devicemotion', handleMotion as EventListener)
-
-    return () => {
-      window.removeEventListener('deviceorientation', handleOrientation as EventListener)
-      window.removeEventListener('devicemotion', handleMotion as EventListener)
-    }
-  }, [])
-
   const handleShoot = useCallback(() => {
     if (isShooting) return
     
@@ -116,6 +80,108 @@ export function BasketballGame() {
       ball.vy = (ball.vy / speed) * maxSpeed
     }
   }, [isShooting, orientation])
+
+  useEffect(() => {
+    // Запрос разрешения на доступ к датчикам (для iOS 13+)
+    const requestPermission = async () => {
+      if (typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+        try {
+          const permission = await (DeviceOrientationEvent as any).requestPermission()
+          if (permission === 'granted') {
+            console.log('Orientation permission granted')
+          }
+        } catch (error) {
+          console.error('Error requesting orientation permission:', error)
+        }
+      }
+      
+      if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+        try {
+          const permission = await (DeviceMotionEvent as any).requestPermission()
+          if (permission === 'granted') {
+            console.log('Motion permission granted')
+          }
+        } catch (error) {
+          console.error('Error requesting motion permission:', error)
+        }
+      }
+    }
+
+    // Запрашиваем разрешение при загрузке
+    requestPermission()
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta !== null && e.gamma !== null) {
+        setOrientation({
+          beta: e.beta, // наклон вперед/назад (-180 до 180)
+          gamma: e.gamma, // наклон влево/вправо (-90 до 90)
+        })
+      }
+    }
+
+    const handleMotion = (e: DeviceMotionEvent) => {
+      try {
+        if (e.accelerationIncludingGravity) {
+          const { x, y, z } = e.accelerationIncludingGravity
+          if (x !== null && y !== null && z !== null) {
+            const totalAcceleration = Math.sqrt(x * x + y * y + z * z)
+            
+            // Определяем встряхивание (ускорение > 15)
+            if (totalAcceleration > 15) {
+              const now = Date.now()
+              // Защита от множественных срабатываний (минимум 500мс между бросками)
+              if (now - lastShakeTime.current > 500) {
+                lastShakeTime.current = now
+                handleShoot()
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error handling motion:', error)
+      }
+    }
+
+    // Инициализация датчиков
+    const initSensors = async () => {
+      // Запрашиваем разрешение
+      await requestPermission()
+      
+      // Добавляем обработчики после небольшой задержки для стабильности
+      setTimeout(() => {
+        try {
+          const orientationHandler = handleOrientation as EventListener
+          const motionHandler = handleMotion as EventListener
+          
+          // Добавляем обработчики
+          if ('DeviceOrientationEvent' in window) {
+            window.addEventListener('deviceorientation', orientationHandler, { passive: true } as any)
+          }
+          
+          if ('DeviceMotionEvent' in window) {
+            window.addEventListener('devicemotion', motionHandler, { passive: true } as any)
+          }
+        } catch (error) {
+          console.error('Error adding sensor listeners:', error)
+        }
+      }, 100)
+    }
+
+    // Запускаем инициализацию
+    initSensors()
+
+    return () => {
+      try {
+        const orientationHandler = handleOrientation as EventListener
+        const motionHandler = handleMotion as EventListener
+        window.removeEventListener('deviceorientation', orientationHandler)
+        window.removeEventListener('devicemotion', motionHandler)
+      } catch (error) {
+        console.error('Error removing listeners:', error)
+      }
+    }
+  }, [handleShoot])
+
 
   useEffect(() => {
     const canvas = canvasRef.current

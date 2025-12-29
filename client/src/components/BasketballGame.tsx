@@ -23,6 +23,7 @@ export function BasketballGame() {
   })
   const animationFrameRef = useRef<number>()
   const lastShakeTime = useRef<number>(0)
+  const handleShootRef = useRef<() => void>()
 
   const CANVAS_WIDTH = 400
   const CANVAS_HEIGHT = 600
@@ -81,6 +82,11 @@ export function BasketballGame() {
     }
   }, [isShooting, orientation])
 
+  // Сохраняем актуальную версию функции в ref
+  useEffect(() => {
+    handleShootRef.current = handleShoot
+  }, [handleShoot])
+
   useEffect(() => {
     const requestPermission = async () => {
       try {
@@ -126,13 +132,16 @@ export function BasketballGame() {
           if (x !== null && y !== null && z !== null) {
             const totalAcceleration = Math.sqrt(x * x + y * y + z * z)
             
-            // Определяем встряхивание (ускорение > 15)
-            if (totalAcceleration > 15) {
+            // Определяем встряхивание (ускорение > 12, снижено для лучшей чувствительности)
+            if (totalAcceleration > 12) {
               const now = Date.now()
               // Защита от множественных срабатываний (минимум 500мс между бросками)
               if (now - lastShakeTime.current > 500) {
                 lastShakeTime.current = now
-                handleShoot()
+                // Используем ref для получения актуальной версии функции
+                if (handleShootRef.current) {
+                  handleShootRef.current()
+                }
               }
             }
           }
@@ -175,7 +184,7 @@ export function BasketballGame() {
         console.error('Error removing listeners:', error)
       }
     }
-  }, [handleShoot])
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current

@@ -78,6 +78,64 @@
   cursor: not-allowed;
 }
 
+.permission-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.permission-modal {
+  background: #1a1a2e;
+  border: 3px solid #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.permission-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.permission-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.permission-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  background: #fff;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+  width: 100%;
+}
+
+.permission-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+}
+
+.permission-button:active {
+  transform: scale(0.95);
+}
+
 @media (max-width: 480px) {
   .game-canvas {
     width: 100%;
@@ -91,5 +149,10 @@
   
   .instructions {
     text-align: left;
+  }
+  
+  .permission-modal {
+    margin: 20px;
+    padding: 20px;
   }
 }

@@ -29,8 +29,8 @@ export function BasketballGame() {
 
   const CANVAS_WIDTH = 400
   const CANVAS_HEIGHT = 600
-  const HOOP_X = CANVAS_WIDTH / 2
-  const HOOP_Y = 100
+  const HOOP_X = CANVAS_WIDTH - 30 // Правая стена, отступ от края
+  const HOOP_Y = CANVAS_HEIGHT - 100 // На уровне шарика
   const HOOP_WIDTH = 80
   const HOOP_HEIGHT = 10
   const GRAVITY = 0.5
@@ -38,11 +38,13 @@ export function BasketballGame() {
   const BOUNCE = 0.7
 
   const checkCollision = useCallback((ball: Ball): boolean => {
+    // Кольцо вертикальное на правой стене
     const dx = ball.x - HOOP_X
     const dy = ball.y - HOOP_Y
     const distance = Math.sqrt(dx * dx + dy * dy)
     
-    if (distance < HOOP_WIDTH / 2 && ball.y > HOOP_Y - 5 && ball.y < HOOP_Y + 15) {
+    // Попадание в вертикальное кольцо (мяч проходит через центр кольца)
+    if (distance < HOOP_WIDTH / 2 && ball.x > HOOP_X - 15 && ball.x < HOOP_X + 5) {
       return true
     }
     return false
@@ -263,20 +265,22 @@ export function BasketballGame() {
         }
       }
 
+      // Рисуем вертикальное кольцо на правой стене
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 4
       ctx.beginPath()
-      ctx.moveTo(HOOP_X - HOOP_WIDTH / 2, HOOP_Y)
-      ctx.lineTo(HOOP_X + HOOP_WIDTH / 2, HOOP_Y)
+      ctx.moveTo(HOOP_X, HOOP_Y - HOOP_WIDTH / 2)
+      ctx.lineTo(HOOP_X, HOOP_Y + HOOP_WIDTH / 2)
       ctx.stroke()
 
+      // Рисуем сетку кольца (вертикальная)
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 2
       for (let i = 0; i < 5; i++) {
-        const x = HOOP_X - HOOP_WIDTH / 2 + (HOOP_WIDTH / 4) * i
+        const y = HOOP_Y - HOOP_WIDTH / 2 + (HOOP_WIDTH / 4) * i
         ctx.beginPath()
-        ctx.moveTo(x, HOOP_Y)
-        ctx.lineTo(HOOP_X, HOOP_Y + 30)
+        ctx.moveTo(HOOP_X, y)
+        ctx.lineTo(HOOP_X - 30, HOOP_Y)
         ctx.stroke()
       }
 

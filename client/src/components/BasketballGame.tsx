@@ -44,7 +44,8 @@ export function BasketballGame() {
     const distance = Math.sqrt(dx * dx + dy * dy)
     
     // Попадание в кольцо (мяч проходит через центр кольца)
-    if (distance < HOOP_WIDTH / 2 && ball.y > HOOP_Y - 5 && ball.y < HOOP_Y + 15) {
+    // Увеличена зона попадания для более легкого засчитывания
+    if (distance < HOOP_WIDTH / 2 + 5 && ball.y > HOOP_Y - 10 && ball.y < HOOP_Y + 20) {
       return true
     }
     return false
@@ -252,7 +253,9 @@ export function BasketballGame() {
         ball.vy *= FRICTION
 
         if (checkCollision(ball)) {
+          // Увеличиваем счет при попадании в корзину
           setScore(prev => prev + 1)
+          console.log('Basket! Score:', score + 1)
           setTimeout(() => {
             resetBall()
             setIsShooting(false)

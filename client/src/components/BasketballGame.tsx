@@ -71,8 +71,8 @@ export function BasketballGame() {
     const ball = ballRef.current
     
     // Увеличена сила броска, чтобы мяч мог долететь до кольца
-    const maxSpeed = 25
-    const baseSpeed = 15
+    const maxSpeed = 28
+    const baseSpeed = 18
     
     // Вычисляем направление к кольцу
     const targetX = HOOP_X
@@ -91,7 +91,7 @@ export function BasketballGame() {
     
     // Вычисляем скорость с учетом направления к кольцу и наклона
     ball.vx = (dirX + tiltX) * baseSpeed
-    ball.vy = (dirY + tiltY) * baseSpeed - 5 // Базовая скорость вверх
+    ball.vy = (dirY + tiltY) * baseSpeed - 6 // Базовая скорость вверх увеличена
     
     // Ограничиваем максимальную скорость
     const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy)

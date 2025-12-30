@@ -29,8 +29,8 @@ export function BasketballGame() {
 
   const CANVAS_WIDTH = 400
   const CANVAS_HEIGHT = 600
-  const HOOP_X = CANVAS_WIDTH - 30 // Правая стена, отступ от края
-  const HOOP_Y = CANVAS_HEIGHT - 100 // На уровне шарика
+  const HOOP_X = CANVAS_WIDTH / 2
+  const HOOP_Y = 100
   const HOOP_WIDTH = 80
   const HOOP_HEIGHT = 10
   const GRAVITY = 0.5
@@ -38,13 +38,13 @@ export function BasketballGame() {
   const BOUNCE = 0.7
 
   const checkCollision = useCallback((ball: Ball): boolean => {
-    // Кольцо вертикальное на правой стене
+    // Проверка попадания в кольцо
     const dx = ball.x - HOOP_X
     const dy = ball.y - HOOP_Y
     const distance = Math.sqrt(dx * dx + dy * dy)
     
-    // Попадание в вертикальное кольцо (мяч проходит через центр кольца)
-    if (distance < HOOP_WIDTH / 2 && ball.x > HOOP_X - 15 && ball.x < HOOP_X + 5) {
+    // Попадание в кольцо (мяч проходит через центр кольца)
+    if (distance < HOOP_WIDTH / 2 && ball.y > HOOP_Y - 5 && ball.y < HOOP_Y + 15) {
       return true
     }
     return false
@@ -70,10 +70,30 @@ export function BasketballGame() {
     setIsShooting(true)
     const ball = ballRef.current
     
-    const maxSpeed = 15
-    ball.vx = (orientation.gamma / 90) * maxSpeed
-    ball.vy = -(Math.abs(orientation.beta) / 90) * maxSpeed - 8
+    // Увеличена сила броска, чтобы мяч мог долететь до кольца
+    const maxSpeed = 25
+    const baseSpeed = 15
     
+    // Вычисляем направление к кольцу
+    const targetX = HOOP_X
+    const targetY = HOOP_Y
+    const dx = targetX - ball.x
+    const dy = targetY - ball.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    
+    // Нормализуем направление
+    const dirX = dx / distance
+    const dirY = dy / distance
+    
+    // Комбинируем направление к кольцу с наклоном устройства
+    const tiltX = (orientation.gamma / 90) * 0.3 // Влияние наклона уменьшено
+    const tiltY = -(Math.abs(orientation.beta) / 90) * 0.3
+    
+    // Вычисляем скорость с учетом направления к кольцу и наклона
+    ball.vx = (dirX + tiltX) * baseSpeed
+    ball.vy = (dirY + tiltY) * baseSpeed - 5 // Базовая скорость вверх
+    
+    // Ограничиваем максимальную скорость
     const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy)
     if (speed > maxSpeed) {
       ball.vx = (ball.vx / speed) * maxSpeed
@@ -265,22 +285,22 @@ export function BasketballGame() {
         }
       }
 
-      // Рисуем вертикальное кольцо на правой стене
+      // Рисуем кольцо
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 4
       ctx.beginPath()
-      ctx.moveTo(HOOP_X, HOOP_Y - HOOP_WIDTH / 2)
-      ctx.lineTo(HOOP_X, HOOP_Y + HOOP_WIDTH / 2)
+      ctx.moveTo(HOOP_X - HOOP_WIDTH / 2, HOOP_Y)
+      ctx.lineTo(HOOP_X + HOOP_WIDTH / 2, HOOP_Y)
       ctx.stroke()
 
-      // Рисуем сетку кольца (вертикальная)
+      // Рисуем сетку кольца
       ctx.strokeStyle = '#ffffff'
       ctx.lineWidth = 2
       for (let i = 0; i < 5; i++) {
-        const y = HOOP_Y - HOOP_WIDTH / 2 + (HOOP_WIDTH / 4) * i
+        const x = HOOP_X - HOOP_WIDTH / 2 + (HOOP_WIDTH / 4) * i
         ctx.beginPath()
-        ctx.moveTo(HOOP_X, y)
-        ctx.lineTo(HOOP_X - 30, HOOP_Y)
+        ctx.moveTo(x, HOOP_Y)
+        ctx.lineTo(HOOP_X, HOOP_Y + 30)
         ctx.stroke()
       }
 

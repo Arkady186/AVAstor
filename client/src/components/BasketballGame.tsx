@@ -26,6 +26,7 @@ export function BasketballGame() {
   const animationFrameRef = useRef<number>()
   const lastShakeTime = useRef<number>(0)
   const handleShootRef = useRef<() => void>()
+  const lastAccelerationYRef = useRef<number>(0)
 
   const CANVAS_WIDTH = 400
   const CANVAS_HEIGHT = 600
@@ -71,36 +72,12 @@ export function BasketballGame() {
     setIsShooting(true)
     const ball = ballRef.current
     
-    // Увеличена сила броска, чтобы мяч мог долететь до кольца
-    const maxSpeed = 28
-    const baseSpeed = 18
+    // Мяч всегда подбрасывается вертикально вверх
+    const upwardSpeed = 20 // Скорость подбрасывания вверх
     
-    // Вычисляем направление к кольцу
-    const targetX = HOOP_X
-    const targetY = HOOP_Y
-    const dx = targetX - ball.x
-    const dy = targetY - ball.y
-    const distance = Math.sqrt(dx * dx + dy * dy)
-    
-    // Нормализуем направление
-    const dirX = dx / distance
-    const dirY = dy / distance
-    
-    // Комбинируем направление к кольцу с наклоном устройства
-    const tiltX = (orientation.gamma / 90) * 0.3 // Влияние наклона уменьшено
-    const tiltY = -(Math.abs(orientation.beta) / 90) * 0.3
-    
-    // Вычисляем скорость с учетом направления к кольцу и наклона
-    ball.vx = (dirX + tiltX) * baseSpeed
-    ball.vy = (dirY + tiltY) * baseSpeed - 6 // Базовая скорость вверх увеличена
-    
-    // Ограничиваем максимальную скорость
-    const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy)
-    if (speed > maxSpeed) {
-      ball.vx = (ball.vx / speed) * maxSpeed
-      ball.vy = (ball.vy / speed) * maxSpeed
-    }
-  }, [isShooting, orientation])
+    ball.vx = 0 // Без горизонтального движения
+    ball.vy = -upwardSpeed // Вертикально вверх (отрицательное значение = вверх)
+  }, [isShooting])
 
   useEffect(() => {
     handleShootRef.current = handleShoot
@@ -169,9 +146,15 @@ export function BasketballGame() {
         if (e.accelerationIncludingGravity) {
           const { x, y, z } = e.accelerationIncludingGravity
           if (x !== null && y !== null && z !== null) {
-            const totalAcceleration = Math.sqrt(x * x + y * y + z * z)
+            // Определяем взмах вверх по резкому изменению ускорения по оси Y
+            // При взмахе вверх ускорение Y резко уменьшается (становится более отрицательным)
+            const currentAccelerationY = y
+            const accelerationDelta = lastAccelerationYRef.current - currentAccelerationY
             
-            if (totalAcceleration > 12) {
+            // Порог для определения взмаха вверх (резкое движение вверх)
+            const upwardSwipeThreshold = 8
+            
+            if (accelerationDelta > upwardSwipeThreshold) {
               const now = Date.now()
               if (now - lastShakeTime.current > 500) {
                 lastShakeTime.current = now
@@ -180,6 +163,8 @@ export function BasketballGame() {
                 }
               }
             }
+            
+            lastAccelerationYRef.current = currentAccelerationY
           }
         }
       } catch (error) {

@@ -1,0 +1,33 @@
+Файлы баскетбольной игры:
+
+ОСНОВНЫЕ ФАЙЛЫ ИГРЫ:
+====================
+1. client/src/components/BasketballGame.tsx - основной компонент игры
+2. client/src/components/BasketballGame.css - стили игры
+3. client/src/components/SplashScreen.tsx - заставка при запуске
+4. client/src/components/SplashScreen.css - стили заставки
+5. client/src/App.tsx - главный компонент приложения
+6. client/src/main.tsx - точка входа React приложения
+7. client/src/styles.css - общие стили
+
+КОНФИГУРАЦИЯ:
+=============
+8. client/index.html - HTML шаблон
+9. client/package.json - зависимости клиента
+10. client/vite.config.ts - конфигурация Vite
+11. client/tsconfig.json - конфигурация TypeScript
+12. client/tsconfig.node.json - конфигурация TypeScript для Node
+
+СЕРВЕР:
+=======
+13. server/index.js - Express сервер
+14. package.json - корневые зависимости проекта
+15. README.md - документация
+
+НЕ НУЖНЫ ДЛЯ БАСКЕТБОЛА (старые файлы):
+========================================
+- client/src/data/studio.ts
+- client/src/ui/* (все файлы в ui/)
+- client/public/feelday/ (старые файлы)
+- scrape-feelday.mjs
+

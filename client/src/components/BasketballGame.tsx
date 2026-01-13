@@ -241,9 +241,26 @@ export function BasketballGame() {
       const ball = ballRef.current
 
       if (!isShooting) {
-        const targetX = CANVAS_WIDTH / 2 + (orientation.gamma / 90) * (CANVAS_WIDTH / 2 - ball.radius - 20)
+        // Движение по дуге (полукругу) внизу экрана
+        const arcRadius = (CANVAS_WIDTH - ball.radius * 2) / 2 // Радиус дуги
+        const arcCenterX = CANVAS_WIDTH / 2
+        const arcCenterY = CANVAS_HEIGHT - 100 // Центр дуги на уровне мяча
+        
+        // Угол от -90 до +90 градусов в зависимости от наклона
+        const tiltAngle = (orientation.gamma / 90) * Math.PI / 2 // от -π/2 до +π/2
+        
+        // Вычисляем позицию на дуге
+        const targetX = arcCenterX + Math.cos(tiltAngle) * arcRadius
+        const targetY = arcCenterY - Math.sin(tiltAngle) * arcRadius
+        
+        // Плавное движение к целевой позиции
         ball.x += (targetX - ball.x) * 0.1
-        ball.x = Math.max(ball.radius, Math.min(CANVAS_WIDTH - ball.radius, ball.x))
+        ball.y += (targetY - ball.y) * 0.1
+        
+        // Ограничение по краям (мяч не должен выходить за пределы дуги)
+        const minX = ball.radius
+        const maxX = CANVAS_WIDTH - ball.radius
+        ball.x = Math.max(minX, Math.min(maxX, ball.x))
       } else {
         ball.vy += GRAVITY
         ball.x += ball.vx

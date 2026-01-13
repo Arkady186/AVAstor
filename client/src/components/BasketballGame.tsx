@@ -241,23 +241,26 @@ export function BasketballGame() {
       const ball = ballRef.current
 
       if (!isShooting) {
-        // Движение по дуге (полукругу) внизу экрана
-        const arcRadius = (CANVAS_WIDTH - ball.radius * 2) / 2 // Радиус дуги
+        // Движение по горизонтальной дуге (полукругу) внизу экрана
+        const arcRadius = 150 // Радиус дуги (высота арки)
         const arcCenterX = CANVAS_WIDTH / 2
-        const arcCenterY = CANVAS_HEIGHT - 100 // Центр дуги на уровне мяча
+        const baseY = CANVAS_HEIGHT - 100 // Базовый уровень Y (низ экрана)
         
-        // Угол от -90 до +90 градусов в зависимости от наклона
-        const tiltAngle = (orientation.gamma / 90) * Math.PI / 2 // от -π/2 до +π/2
+        // Угол от 0 до π (от левого края до правого) в зависимости от наклона
+        // gamma от -90 до +90, преобразуем в угол от 0 до π
+        const tiltNormalized = (orientation.gamma + 90) / 180 // от 0 до 1
+        const tiltAngle = tiltNormalized * Math.PI // от 0 до π
         
-        // Вычисляем позицию на дуге
-        const targetX = arcCenterX + Math.cos(tiltAngle) * arcRadius
-        const targetY = arcCenterY - Math.sin(tiltAngle) * arcRadius
+        // Вычисляем позицию на горизонтальной дуге (повернутой на 90°)
+        // X движется по дуге, Y поднимается вверх по дуге
+        const targetX = arcCenterX + (Math.cos(tiltAngle) - 1) * arcRadius
+        const targetY = baseY - Math.sin(tiltAngle) * arcRadius
         
         // Плавное движение к целевой позиции
         ball.x += (targetX - ball.x) * 0.1
         ball.y += (targetY - ball.y) * 0.1
         
-        // Ограничение по краям (мяч не должен выходить за пределы дуги)
+        // Ограничение по краям
         const minX = ball.radius
         const maxX = CANVAS_WIDTH - ball.radius
         ball.x = Math.max(minX, Math.min(maxX, ball.x))

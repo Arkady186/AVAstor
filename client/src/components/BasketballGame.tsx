@@ -241,29 +241,28 @@ export function BasketballGame() {
       const ball = ballRef.current
 
       if (!isShooting) {
-        // Движение по горизонтальной дуге (полукругу) внизу экрана
-        const arcRadius = 150 // Радиус дуги (высота арки)
-        const arcCenterX = CANVAS_WIDTH / 2
-        const baseY = CANVAS_HEIGHT - 100 // Базовый уровень Y (низ экрана)
-        
-        // Угол от 0 до π (от левого края до правого) в зависимости от наклона
-        // gamma от -90 до +90, преобразуем в угол от 0 до π
-        const tiltNormalized = (orientation.gamma + 90) / 180 // от 0 до 1
-        const tiltAngle = tiltNormalized * Math.PI // от 0 до π
-        
-        // Вычисляем позицию на горизонтальной дуге (повернутой на 90°)
-        // X движется по дуге, Y поднимается вверх по дуге
-        const targetX = arcCenterX + (Math.cos(tiltAngle) - 1) * arcRadius
-        const targetY = baseY - Math.sin(tiltAngle) * arcRadius
-        
-        // Плавное движение к целевой позиции
+        // Движение по X как было (прямое слева направо)
+        const targetX = CANVAS_WIDTH / 2 + (orientation.gamma / 90) * (CANVAS_WIDTH / 2 - ball.radius - 20)
         ball.x += (targetX - ball.x) * 0.1
-        ball.y += (targetY - ball.y) * 0.1
+        ball.x = Math.max(ball.radius, Math.min(CANVAS_WIDTH - ball.radius, ball.x))
         
-        // Ограничение по краям
-        const minX = ball.radius
-        const maxX = CANVAS_WIDTH - ball.radius
-        ball.x = Math.max(minX, Math.min(maxX, ball.x))
+        // Движение по Y по полукругу (вогнутому вверх)
+        // Внешняя часть полукруга касается середины нижней платформы
+        const baseY = CANVAS_HEIGHT - 100 // Уровень платформы (середина)
+        const arcRadius = 80 // Радиус полукруга (высота арки)
+        const centerX = CANVAS_WIDTH / 2 // Центр платформы
+        
+        // Расстояние от центра платформы до текущей позиции мяча
+        const distanceFromCenter = Math.abs(ball.x - centerX)
+        const maxDistance = CANVAS_WIDTH / 2 - ball.radius // Максимальное расстояние до края
+        
+        // Вычисляем Y по дуге: в центре мяч на платформе, на краях выше
+        // Используем формулу полукруга: y = baseY - sqrt(arcRadius^2 - (x - centerX)^2)
+        // Но упростим: чем дальше от центра, тем выше мяч
+        const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1)
+        const targetY = baseY - Math.sin(normalizedDistance * Math.PI / 2) * arcRadius
+        
+        ball.y += (targetY - ball.y) * 0.1
       } else {
         ball.vy += GRAVITY
         ball.x += ball.vx

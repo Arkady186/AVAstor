@@ -73,7 +73,7 @@ export function BasketballGame() {
     const ball = ballRef.current
     
     // Мяч всегда подбрасывается вертикально вверх
-    const upwardSpeed = 25 // Скорость подбрасывания вверх (увеличена)
+    const upwardSpeed = 28 // Скорость подбрасывания вверх (еще увеличена)
     
     ball.vx = 0 // Без горизонтального движения
     ball.vy = -upwardSpeed // Вертикально вверх (отрицательное значение = вверх)

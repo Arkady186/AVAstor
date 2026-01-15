@@ -160,11 +160,11 @@ export function BasketballGame() {
             // При взмахе вверх ускорение Y резко увеличивается (телефон движется вверх)
             const upwardDelta = currentAccelerationY - lastAccelerationY
             
-            // Порог для определения взмаха вверх - очень низкий для чувствительности
-            const upwardSwipeThreshold = 2.5
+            // Порог для определения взмаха вверх - увеличен для меньшей чувствительности
+            const upwardSwipeThreshold = 5
             
-            // Порог для общего встряхивания - очень низкий для чувствительности
-            const shakeThreshold = 1.5
+            // Порог для общего встряхивания - увеличен для меньшей чувствительности
+            const shakeThreshold = 3.5
             
             // Также проверяем изменение ускорения по любой оси для определения встряхивания
             const deltaX = Math.abs(x - (lastAccelerationXRef.current || 0))
@@ -179,7 +179,7 @@ export function BasketballGame() {
             const isUpwardSwipe = upwardDelta > upwardSwipeThreshold
             const isShake = Math.abs(totalAcceleration - lastTotalAcceleration) > shakeThreshold || maxDelta > shakeThreshold
             
-            if ((isUpwardSwipe || isShake) && timeSinceLastShake > 250) {
+            if ((isUpwardSwipe || isShake) && timeSinceLastShake > 400) {
               lastShakeTime.current = now
               if (handleShootRef.current) {
                 handleShootRef.current()

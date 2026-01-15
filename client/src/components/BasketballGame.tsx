@@ -27,6 +27,8 @@ export function BasketballGame() {
   const lastShakeTime = useRef<number>(0)
   const handleShootRef = useRef<() => void>()
   const lastAccelerationYRef = useRef<number>(0)
+  const lastAccelerationXRef = useRef<number>(0)
+  const lastAccelerationZRef = useRef<number>(0)
   const lastTotalAccelerationRef = useRef<number>(0)
 
   const CANVAS_WIDTH = 400
@@ -153,22 +155,31 @@ export function BasketballGame() {
             
             // Определяем взмах вверх по резкому изменению ускорения по оси Y
             const currentAccelerationY = y
-            const accelerationDelta = lastAccelerationYRef.current - currentAccelerationY
+            const lastAccelerationY = lastAccelerationYRef.current || 0
             
-            // Порог для определения взмаха вверх (резкое движение вверх) - уменьшен для большей чувствительности
-            const upwardSwipeThreshold = 4
+            // При взмахе вверх ускорение Y резко увеличивается (телефон движется вверх)
+            const upwardDelta = currentAccelerationY - lastAccelerationY
             
-            // Порог для общего встряхивания - уменьшен для большей чувствительности
-            const shakeThreshold = 2
+            // Порог для определения взмаха вверх - очень низкий для чувствительности
+            const upwardSwipeThreshold = 2.5
+            
+            // Порог для общего встряхивания - очень низкий для чувствительности
+            const shakeThreshold = 1.5
+            
+            // Также проверяем изменение ускорения по любой оси для определения встряхивания
+            const deltaX = Math.abs(x - (lastAccelerationXRef.current || 0))
+            const deltaY = Math.abs(y - lastAccelerationY)
+            const deltaZ = Math.abs(z - (lastAccelerationZRef.current || 0))
+            const maxDelta = Math.max(deltaX, deltaY, deltaZ)
             
             const now = Date.now()
             const timeSinceLastShake = now - lastShakeTime.current
             
-            // Проверяем взмах вверх или общее встряхивание
-            const isUpwardSwipe = accelerationDelta > upwardSwipeThreshold
-            const isShake = Math.abs(totalAcceleration - lastTotalAcceleration) > shakeThreshold
+            // Проверяем взмах вверх или любое встряхивание
+            const isUpwardSwipe = upwardDelta > upwardSwipeThreshold
+            const isShake = Math.abs(totalAcceleration - lastTotalAcceleration) > shakeThreshold || maxDelta > shakeThreshold
             
-            if ((isUpwardSwipe || isShake) && timeSinceLastShake > 300) {
+            if ((isUpwardSwipe || isShake) && timeSinceLastShake > 250) {
               lastShakeTime.current = now
               if (handleShootRef.current) {
                 handleShootRef.current()
@@ -177,6 +188,8 @@ export function BasketballGame() {
             
             lastAccelerationYRef.current = currentAccelerationY
             lastTotalAccelerationRef.current = totalAcceleration
+            lastAccelerationXRef.current = x
+            lastAccelerationZRef.current = z
           }
         }
       } catch (error) {
